@@ -275,6 +275,7 @@
 
     return `##MASTER PROMPT — PREMIUM VISUAL DESIGN V3.0##
 
+@สร้างภาพ
 [01] CORE CONFIGURATION
 COLOR_THEME = "${p.name}" — Primary ${c.primary}, Secondary ${c.secondary}, Tertiary ${c.tertiary}, Metallic/Accent ${c.metallic}, Background ${c.bg}
 CONTENT = "${state.content.trim()}"
