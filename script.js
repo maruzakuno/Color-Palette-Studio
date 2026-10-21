@@ -422,7 +422,20 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
       saveState();
     });
     els.department.addEventListener("change", (e) => {
-      state.department = e.target.value;
+      const oldDept = state.department;
+      const newDept = e.target.value;
+      const oldPrefix = oldDept ? `${oldDept} — ` : "";
+      let content = state.content || "";
+      if (oldPrefix && content.startsWith(oldPrefix)) {
+        content = content.slice(oldPrefix.length);
+      }
+      if (newDept) {
+        content = `${newDept} — ${content}`;
+      }
+      state.department = newDept;
+      state.content = content;
+      els.content.value = content;
+      renderPreview();
       renderPrompt();
       saveState();
     });
