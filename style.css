@@ -151,7 +151,7 @@ a { color: inherit; }
 .quick span { font-size: 13px; color: var(--night-muted); align-self: center; margin-right: 2px; }
 .quick button { border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.06); color: var(--night-ink); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 500; transition: background .15s, border-color .15s, transform .15s; }
 .quick button:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.3); transform: translateY(-1px); }
-.hstats { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); width: 100%; max-width: 820px; margin-top: 6px; border-top: 1px solid var(--night-line); padding-top: 22px; }
+.hstats { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); width: 100%; max-width: 820px; margin-top: 6px; border-top: 1px solid var(--night-line); padding-top: 22px; }
 .hstats div { display: flex; flex-direction: column; gap: 2px; padding-inline: 10px; border-left: 1px solid var(--night-line); }
 .hstats div:first-child { border-left: 0; }
 .hstats b { font-size: 22px; font-weight: 700; letter-spacing: -.02em; }

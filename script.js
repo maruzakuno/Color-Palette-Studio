@@ -229,7 +229,6 @@
       <div><b>${PALETTES.length}</b><small>พาเลตสี</small></div>
       <div><b>${cats.length}</b><small>หมวดหมู่</small></div>
       <div><b>07</b><small>ส่วนโครงสร้างพรอมป์</small></div>
-      <div><b>Local</b><small>ไม่ส่งข้อมูลออกเซิร์ฟเวอร์</small></div>
     `;
   }
 
