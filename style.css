@@ -96,8 +96,13 @@ a { color: inherit; }
 .icon-btn { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); transition: background .15s, border-color .15s, transform .15s; }
 .icon-btn:hover { border-color: var(--line-strong); background: var(--surface-2); }
 
+.nav-credit { flex: none; margin-left: 14px; font-size: 11px; font-weight: 500; color: var(--faint); white-space: nowrap; letter-spacing: .01em; }
+
 @media (max-width: 860px) {
   .nav-links, .nav-search { display: none; }
+}
+@media (max-width: 640px) {
+  .nav-credit { display: none; }
 }
 
 /* ---------- buttons ---------- */
