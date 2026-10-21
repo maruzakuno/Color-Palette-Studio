@@ -63,6 +63,7 @@
     grid: document.getElementById("paletteGrid"),
     content: document.getElementById("contentInput"),
     clearContentBtn: document.getElementById("clearContentBtn"),
+    department: document.getElementById("department"),
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
     backgroundPattern: document.getElementById("backgroundPattern"),
@@ -92,6 +93,7 @@
     contentType: els.contentType.value,
     aspectRatio: els.aspectRatio.value,
     backgroundPattern: els.backgroundPattern.value,
+    department: "",
     includePeople: true,
     includeMetallic: true,
   };
@@ -282,6 +284,7 @@ CONTENT = "${state.content.trim()}"
 CONTENT_TYPE = "${state.contentType}"
 ASPECT_RATIO = "${state.aspectRatio}"
 BACKGROUND_PATTERN = "${state.backgroundPattern || "None — flat background"}"
+DEPARTMENT = "${state.department || "ไม่ระบุกลุ่มงาน"}"
 
 [02] DESIGN CONCEPT
 Create a world-class premium Thai educational and government visual composition. Combine Premium Thai Educational Report, Luxury Academic Cover, Elegant Government Report, and high-end editorial design. The result must be sophisticated, modern, clean, visually impressive, credible, and suitable for professional healthcare communication.
@@ -418,6 +421,11 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
       renderPrompt();
       saveState();
     });
+    els.department.addEventListener("change", (e) => {
+      state.department = e.target.value;
+      renderPrompt();
+      saveState();
+    });
     els.includePeople.addEventListener("change", (e) => {
       state.includePeople = e.target.checked;
       renderPrompt();
@@ -451,6 +459,7 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     els.contentType.value = state.contentType;
     els.aspectRatio.value = state.aspectRatio;
     els.backgroundPattern.value = state.backgroundPattern || "";
+    els.department.value = state.department || "";
     els.includePeople.checked = state.includePeople;
     els.includeMetallic.checked = state.includeMetallic;
     els.heroSearch.value = state.query || "";
