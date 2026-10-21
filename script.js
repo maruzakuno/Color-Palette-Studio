@@ -62,6 +62,7 @@
     resCount: document.getElementById("resCount"),
     grid: document.getElementById("paletteGrid"),
     content: document.getElementById("contentInput"),
+    clearContentBtn: document.getElementById("clearContentBtn"),
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
     backgroundPattern: document.getElementById("backgroundPattern"),
@@ -388,6 +389,14 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
 
     els.content.addEventListener("input", (e) => {
       state.content = e.target.value;
+      renderPreview();
+      renderPrompt();
+      saveState();
+    });
+    els.clearContentBtn.addEventListener("click", () => {
+      state.content = "";
+      els.content.value = "";
+      els.content.focus();
       renderPreview();
       renderPrompt();
       saveState();
