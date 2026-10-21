@@ -313,6 +313,8 @@ Style standard: ${STYLE_TAGS.join(" / ")}.
 [07] NEGATIVE CONSTRAINTS
 No mismatched color palettes, accidental default blue-gold decoration unless specified in [01], clutter, poor contrast, illegible text, incorrect Thai spelling, distorted anatomy, duplicate people, extra fingers, fake charts, fabricated values, watermark, random lettering, or uncontrolled gradients.
 
+NEGATIVE PROMPT: Distorted Thai characters, misspelled words, hallucinated data, deformed maps, swapped district boundaries, unreadable tables, blurred numbers, disproportionate logos, cluttered layout, messy composition, low resolution, flat design, cartoonish style, bad anatomy, distorted doctor, unreadable text, oversaturated colors, cheap template aesthetics, random English gibberish, watermarks, extra logos, redundant graphic elements, grainy texture, artifacts.
+
 FINAL RULE: All visual color decisions must derive from the single COLOR_THEME configuration in [01]. Never override it elsewhere in the prompt.
 
 CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
