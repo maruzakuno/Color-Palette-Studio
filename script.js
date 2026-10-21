@@ -255,6 +255,28 @@
     { id: "aquamarine-white", name: "ฟ้าอะความารีน - ขาว (Aquamarine & White)", category: "นุ่มนวลและเป็นมิตร",
       colors: { primary: "#a0e7e5", secondary: "#f0fdfd", tertiary: "#c1f2f0", metallic: "#d9faf9", bg: "#f6ffff" } },
 
+    // สีมงคลตามความเชื่อไทย (18th category)
+    { id: "mongkol-gold", name: "ทอง - เงินทอง/ความมั่งคั่ง (Gold — Wealth)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#d4af37", secondary: "#8b6914", tertiary: "#f0c75e", metallic: "#ffe9a8", bg: "#fffaf0" } },
+    { id: "mongkol-red", name: "แดง - โชคลาภ/พลัง (Red — Luck & Power)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#c8102e", secondary: "#8b0000", tertiary: "#e63950", metallic: "#f5a3ad", bg: "#fff0f1" } },
+    { id: "mongkol-green", name: "เขียว - สุขภาพ/เจริญเติบโต (Green — Health & Growth)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#2e7d32", secondary: "#1b5e20", tertiary: "#66bb6a", metallic: "#c8e6c9", bg: "#f1faf2" } },
+    { id: "mongkol-blue", name: "ฟ้า - ความสงบ/สติปัญญา (Blue — Calm & Wisdom)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#1e88e5", secondary: "#0d47a1", tertiary: "#64b5f6", metallic: "#bbdefb", bg: "#f0f8ff" } },
+    { id: "mongkol-purple", name: "ม่วง - บารมี/เกียรติยศ (Purple — Prestige & Honor)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#6a1b9a", secondary: "#4a148c", tertiary: "#ab47bc", metallic: "#e1bee7", bg: "#faf0fc" } },
+    { id: "mongkol-pink", name: "ชมพู - ความรัก/เมตตา (Pink — Love & Kindness)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#ec407a", secondary: "#ad1457", tertiary: "#f48fb1", metallic: "#f8bbd0", bg: "#fff0f5" } },
+    { id: "mongkol-yellow", name: "เหลือง - ศรัทธา/สถาบัน (Yellow — Faith & Royalty)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#fbc02d", secondary: "#f57f17", tertiary: "#ffd54f", metallic: "#ffecb3", bg: "#fffdf0" } },
+    { id: "mongkol-black", name: "ดำ - อำนาจ/ปกป้อง (Black — Power & Protection)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#212121", secondary: "#000000", tertiary: "#424242", metallic: "#9e9e9e", bg: "#f5f5f5" } },
+    { id: "mongkol-white", name: "ขาว - บริสุทธิ์/สันติ (White — Purity & Peace)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#fafafa", secondary: "#e0e0e0", tertiary: "#f5f5f5", metallic: "#eeeeee", bg: "#ffffff" } },
+    { id: "mongkol-orange", name: "ส้ม - พลังงาน/ความคิดสร้างสรรค์ (Orange — Energy & Creativity)", category: "สีมงคลตามความเชื่อไทย",
+      colors: { primary: "#fb8c00", secondary: "#e65100", tertiary: "#ffa726", metallic: "#ffe0b2", bg: "#fff8f0" } },
+
     // Material Design
     { id: "material-red", name: "Material Red", category: "Material Design",
       colors: { primary: "#f44336", secondary: "#d32f2f", tertiary: "#ff7043", metallic: "#ffcdd2", bg: "#fff5f5" } },
