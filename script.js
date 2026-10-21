@@ -294,7 +294,6 @@
     styleTags: document.getElementById("styleTags"),
     themeBtn: document.getElementById("themeBtn"),
     nav: document.getElementById("nav"),
-    navCredit: document.getElementById("navCredit"),
   };
 
   let state = {
@@ -455,12 +454,6 @@
     root.setProperty("--p-tertiary", p.tertiary);
     root.setProperty("--p-metallic", p.metallic);
     root.setProperty("--p-bg", p.bg);
-  }
-
-  function renderNavCredit() {
-    els.navCredit.textContent = state.department
-      ? `${state.department} สำนักงานสาธารณสุขจังหวัดนราธิวาส`
-      : "สำนักงานสาธารณสุขจังหวัดนราธิวาส";
   }
 
   function renderStyleTags() {
@@ -684,7 +677,6 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
       els.content.value = content;
       renderPreview();
       renderPrompt();
-      renderNavCredit();
       saveState();
     });
     els.includePeople.addEventListener("change", (e) => {
@@ -737,7 +729,6 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     updateThemeIcon();
     loadState();
     restoreFormFromState();
-    renderNavCredit();
     renderStyleTags();
     renderStats();
     renderQuick();
