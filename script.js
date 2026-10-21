@@ -302,7 +302,9 @@ Style standard: ${STYLE_TAGS.join(" / ")}.
 [07] NEGATIVE CONSTRAINTS
 No mismatched color palettes, accidental default blue-gold decoration unless specified in [01], clutter, poor contrast, illegible text, incorrect Thai spelling, distorted anatomy, duplicate people, extra fingers, fake charts, fabricated values, watermark, random lettering, or uncontrolled gradients.
 
-FINAL RULE: All visual color decisions must derive from the single COLOR_THEME configuration in [01]. Never override it elsewhere in the prompt.`;
+FINAL RULE: All visual color decisions must derive from the single COLOR_THEME configuration in [01]. Never override it elsewhere in the prompt.
+
+CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
   }
 
   function renderPrompt() {
