@@ -32,6 +32,17 @@
       colors: { primary: "#1e3a8a", secondary: "#172554", tertiary: "#3b82f6", metallic: "#cbd5e1", bg: "#f6f8fc" } },
   ];
 
+  const STYLE_TAGS = [
+    "Premium Thai HEALTH Cover style", "Cinematic Photography", "Ultra Photorealistic",
+    "8K", "300 DPI", "Luxurious, elegant, and formal",
+    "Balanced composition, sharp focus, realistic lighting and shadows",
+    "Accurate and legible Thai text", "No additional taglines or extra text",
+    "Do not alter the face", "No distorted uniforms", "No watermarks",
+    "No duplicate people", "No deformed hands or fingers", "Professional Print Quality",
+    "Luxury Government Report", "Realistic Skin Texture", "Realistic Fabric",
+    "Metallic Gold Reflection", "Sharp Focus", "High-end Editorial Design",
+  ];
+
   const LS_KEY = "healthPromptStudio.state.v1";
 
   const els = {
@@ -53,6 +64,7 @@
     copyStatus: document.getElementById("copyStatus"),
     exportJsonBtn: document.getElementById("exportJsonBtn"),
     exportCssBtn: document.getElementById("exportCssBtn"),
+    styleTags: document.getElementById("styleTags"),
   };
 
   let state = {
@@ -151,6 +163,12 @@
     root.setProperty("--accent", p.primary);
   }
 
+  function renderStyleTags() {
+    els.styleTags.innerHTML = STYLE_TAGS
+      .map((t) => `<span class="tag">${t}</span>`)
+      .join("");
+  }
+
   function renderPreview() {
     const p = getPalette();
     els.previewType.textContent = state.contentType.toUpperCase();
@@ -191,6 +209,7 @@ Select subject-appropriate imagery and illustrations based on CONTENT. ${peopleL
 
 [06] QUALITY & OUTPUT
 Ultra-realistic, masterpiece, highly detailed, cinematic lighting, professional magazine quality, high-end editorial finishing, production-grade visual presentation, intended 8K aesthetic. Compose for the exact ASPECT_RATIO selected in [01]. For professional print, use an appropriate high-resolution export and 300 DPI metadata when available.
+Style standard: ${STYLE_TAGS.join(" / ")}.
 
 [07] NEGATIVE CONSTRAINTS
 No mismatched color palettes, accidental default blue-gold decoration unless specified in [01], clutter, poor contrast, illegible text, incorrect Thai spelling, distorted anatomy, duplicate people, extra fingers, fake charts, fabricated values, watermark, random lettering, or uncontrolled gradients.
@@ -288,6 +307,7 @@ FINAL RULE: All visual color decisions must derive from the single COLOR_THEME c
   function init() {
     loadState();
     restoreFormFromState();
+    renderStyleTags();
     renderTabs();
     renderGrid();
     applyPaletteToUI();
