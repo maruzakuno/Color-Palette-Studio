@@ -450,6 +450,7 @@
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
     backgroundPattern: document.getElementById("backgroundPattern"),
+    artStyle: document.getElementById("artStyle"),
     includePeople: document.getElementById("includePeople"),
     includeMetallic: document.getElementById("includeMetallic"),
     previewType: document.getElementById("previewType"),
@@ -476,6 +477,7 @@
     contentType: els.contentType.value,
     aspectRatio: els.aspectRatio.value,
     backgroundPattern: els.backgroundPattern.value,
+    artStyle: els.artStyle.value,
     department: "",
     toneIndex: null,
     includePeople: true,
@@ -695,6 +697,7 @@ ASPECT_RATIO = "${state.aspectRatio}"
 BACKGROUND_PATTERN = "${state.backgroundPattern || "None — flat background"}"
 DEPARTMENT = "${state.department || "ไม่ระบุกลุ่มงาน"}"
 ACCENT_TONE = "${state.toneIndex !== null ? `${toneColorsOf(p)[state.toneIndex]} (${TONE_ROLE_LABELS[TONE_ROLES[state.toneIndex]]} tone of this palette)` : "Not set — use palette colors as-is"}"
+ART_STYLE = "${state.artStyle || "Not set — default to photorealistic editorial rendering"}"
 
 [02] DESIGN CONCEPT
 Create a world-class premium Thai educational and government visual composition. Combine Premium Thai Educational Report, Luxury Academic Cover, Elegant Government Report, and high-end editorial design. The result must be sophisticated, modern, clean, visually impressive, credible, and suitable for professional healthcare communication.
@@ -708,6 +711,7 @@ ${state.backgroundPattern ? `Background treatment: Apply ${state.backgroundPatte
 
 [05] ADAPTIVE VISUAL DIRECTION
 Select subject-appropriate imagery and illustrations based on CONTENT. ${peopleLine} For infographics and dashboards, prioritize data legibility and clean chart structures. Use sharp typography zones, cinematic lighting, sophisticated depth, and cohesive composition.
+${state.artStyle ? `Render characters and subjects in the ART_STYLE defined in [01]: "${state.artStyle}". Keep this rendering style consistent across every figure, prop, and illustrated element in the frame.` : "No specific ART_STYLE selected — default to photorealistic, editorial-quality rendering."}
 
 [06] QUALITY & OUTPUT
 Ultra-realistic, masterpiece, highly detailed, cinematic lighting, professional magazine quality, high-end editorial finishing, production-grade visual presentation, intended 8K aesthetic. Compose for the exact ASPECT_RATIO selected in [01]. For professional print, use an appropriate high-resolution export and 300 DPI metadata when available.
@@ -833,6 +837,11 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
       renderPrompt();
       saveState();
     });
+    els.artStyle.addEventListener("change", (e) => {
+      state.artStyle = e.target.value;
+      renderPrompt();
+      saveState();
+    });
     els.department.addEventListener("change", (e) => {
       const oldDept = state.department;
       const newDept = e.target.value;
@@ -884,6 +893,7 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     els.contentType.value = state.contentType;
     els.aspectRatio.value = state.aspectRatio;
     els.backgroundPattern.value = state.backgroundPattern || "";
+    els.artStyle.value = state.artStyle || "";
     els.department.value = state.department || "";
     els.includePeople.checked = state.includePeople;
     els.includeMetallic.checked = state.includeMetallic;
