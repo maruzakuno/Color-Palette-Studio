@@ -250,65 +250,11 @@
 
   const POPULAR = ["Luxury Emerald & Gold", "Medical Blue", "Royal Navy & Gold", "Violet AI"];
 
-  function hexToRgb(hex) {
-    const m = hex.replace("#", "");
-    return {
-      r: parseInt(m.substring(0, 2), 16),
-      g: parseInt(m.substring(2, 4), 16),
-      b: parseInt(m.substring(4, 6), 16),
-    };
-  }
+  const TONE_ROLES = ["primary", "secondary", "tertiary", "metallic"];
+  const TONE_ROLE_LABELS = { primary: "Primary", secondary: "Secondary", tertiary: "Tertiary", metallic: "Metallic/Accent" };
 
-  function rgbToHex(r, g, b) {
-    const clamp = (v) => Math.max(0, Math.min(255, Math.round(v)));
-    return "#" + [r, g, b].map((v) => clamp(v).toString(16).padStart(2, "0")).join("");
-  }
-
-  function rgbToHsl(r, g, b) {
-    r /= 255; g /= 255; b /= 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
-    let h, s;
-    const l = (max + min) / 2;
-    if (max === min) { h = s = 0; } else {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      if (max === r) h = ((g - b) / d + (g < b ? 6 : 0));
-      else if (max === g) h = (b - r) / d + 2;
-      else h = (r - g) / d + 4;
-      h /= 6;
-    }
-    return { h, s, l };
-  }
-
-  function hslToRgb(h, s, l) {
-    if (s === 0) { const v = l * 255; return { r: v, g: v, b: v }; }
-    const hue2rgb = (p, q, t) => {
-      if (t < 0) t += 1;
-      if (t > 1) t -= 1;
-      if (t < 1 / 6) return p + (q - p) * 6 * t;
-      if (t < 1 / 2) return q;
-      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-      return p;
-    };
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    return {
-      r: hue2rgb(p, q, h + 1 / 3) * 255,
-      g: hue2rgb(p, q, h) * 255,
-      b: hue2rgb(p, q, h - 1 / 3) * 255,
-    };
-  }
-
-  function toneRampFromHex(hex, steps = 10) {
-    const { r, g, b } = hexToRgb(hex);
-    const { h, s } = rgbToHsl(r, g, b);
-    const ramp = [];
-    for (let i = 0; i < steps; i++) {
-      const l = 0.92 - (i / (steps - 1)) * 0.76; // 92% light down to 16% dark
-      const rgb = hslToRgb(h, s, l);
-      ramp.push(rgbToHex(rgb.r, rgb.g, rgb.b));
-    }
-    return ramp;
+  function toneColorsOf(palette) {
+    return TONE_ROLES.map((role) => palette.colors[role]);
   }
 
   const LS_KEY = "healthPromptStudio.state.v1";
@@ -481,14 +427,14 @@
   function renderToneRamp() {
     const p = getPalette();
     els.toneRampPaletteName.textContent = `(${p.name})`;
-    const ramp = toneRampFromHex(p.colors.primary, 10);
+    const tones = toneColorsOf(p);
     els.toneRamp.innerHTML = "";
-    ramp.forEach((hex, i) => {
+    tones.forEach((hex, i) => {
       const sw = document.createElement("button");
       sw.type = "button";
       sw.className = "tone-swatch";
       sw.style.background = hex;
-      sw.title = hex;
+      sw.title = `${TONE_ROLE_LABELS[TONE_ROLES[i]]} — ${hex}`;
       sw.setAttribute("role", "option");
       sw.setAttribute("aria-selected", String(state.toneIndex === i));
       sw.addEventListener("click", () => {
@@ -583,7 +529,7 @@ CONTENT_TYPE = "${state.contentType}"
 ASPECT_RATIO = "${state.aspectRatio}"
 BACKGROUND_PATTERN = "${state.backgroundPattern || "None — flat background"}"
 DEPARTMENT = "${state.department || "ไม่ระบุกลุ่มงาน"}"
-ACCENT_TONE = "${state.toneIndex !== null ? `${toneRampFromHex(c.primary, 10)[state.toneIndex]} (tone ${state.toneIndex + 1}/10 of primary)` : "Not set — use palette colors as-is"}"
+ACCENT_TONE = "${state.toneIndex !== null ? `${toneColorsOf(p)[state.toneIndex]} (${TONE_ROLE_LABELS[TONE_ROLES[state.toneIndex]]} tone of this palette)` : "Not set — use palette colors as-is"}"
 
 [02] DESIGN CONCEPT
 Create a world-class premium Thai educational and government visual composition. Combine Premium Thai Educational Report, Luxury Academic Cover, Elegant Government Report, and high-end editorial design. The result must be sophisticated, modern, clean, visually impressive, credible, and suitable for professional healthcare communication.
