@@ -268,7 +268,9 @@
       ? `Include authentic Thai healthcare professionals or public-service staff: natural poses, anatomically correct hands, realistic skin texture, inclusive human-centered composition.`
       : `No human figures — focus entirely on typography, iconography, and abstract/environmental elements.`;
 
-    return `[01] CORE CONFIGURATION
+    return `MASTER PROMPT — PREMIUM VISUAL DESIGN V3.0
+
+[01] CORE CONFIGURATION
 COLOR_THEME = "${p.name}" — Primary ${c.primary}, Secondary ${c.secondary}, Tertiary ${c.tertiary}, Metallic/Accent ${c.metallic}, Background ${c.bg}
 CONTENT = "${state.content.trim()}"
 CONTENT_TYPE = "${state.contentType}"
