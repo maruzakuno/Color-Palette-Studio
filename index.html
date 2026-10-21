@@ -2,87 +2,164 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>Health Prompt Studio</title>
-<meta name="description" content="สร้าง AI image prompt สำหรับงานสุขภาพและราชการไทยแบบมืออาชีพ พร้อมเลือกพาเลตสี ประเภทเนื้อหา และอัตราส่วนภาพ" />
+<meta name="description" content="คลัง Prompt ภาพ AI สำหรับงานสุขภาพและราชการไทย — เลือกพาเลตสี กำหนดเนื้อหา แล้วคัดลอก Master Prompt ไปใช้ได้ทันที" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" />
 <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="bg-motion" aria-hidden="true">
-    <span class="orb orb-1"></span>
-    <span class="orb orb-2"></span>
-    <span class="orb orb-3"></span>
-  </div>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2l2.2 6.3L20 10l-5.8 1.7L12 18l-2.2-6.3L4 10l5.8-1.7L12 2z"/></symbol>
+      <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></symbol>
+      <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"/></symbol>
+      <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4 12.5-12.5z"/></symbol>
+      <symbol id="i-down" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></symbol>
+      <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+      <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 109 9c0-1-.8-1.5-1.8-1.5h-2.4a2 2 0 01-2-2 2 2 0 01.6-1.4A2 2 0 0015 5.6 7 7 0 0012 3z"/><circle cx="7.5" cy="12" r="1.2"/><circle cx="9.5" cy="8" r="1.2"/><circle cx="14.5" cy="7.5" r="1.2"/></symbol>
+    </defs>
+  </svg>
 
-  <header class="site-header">
-    <h1>Health Prompt Studio</h1>
-    <p class="subtitle">สร้าง Master Prompt สำหรับงานสุขภาพ/ราชการไทยระดับพรีเมียม — เลือกพาเลตสี กำหนดเนื้อหา แล้วคัดลอกไปใช้กับ AI Image Generator</p>
+  <header class="nav" id="nav">
+    <div class="wrap nav-in">
+      <a class="brand" href="#top">
+        <span class="logo"><svg class="i"><use href="#i-spark"/></svg></span>
+        <span class="brand-t"><b>Health Prompt Studio</b><small>AI Visual Prompt Library</small></span>
+      </a>
+      <nav class="nav-links" aria-label="ลัดไปยังส่วนต่าง ๆ">
+        <button type="button" data-goto="cats">หมวดหมู่สี</button>
+        <button type="button" data-goto="results">พาเลตทั้งหมด</button>
+        <button type="button" data-goto="config">กำหนดเนื้อหา</button>
+        <button type="button" data-goto="output">Master Prompt</button>
+      </nav>
+      <div class="nav-search" role="search">
+        <svg class="i"><use href="#i-search"/></svg>
+        <label for="navSearch" class="sr-only">ค้นหาพาเลตสี</label>
+        <input id="navSearch" type="search" autocomplete="off" spellcheck="false" placeholder="ค้นหาพาเลต…" />
+      </div>
+      <div class="nav-actions">
+        <button class="icon-btn" type="button" id="themeBtn" aria-label="สลับโหมดสว่าง/มืด">
+          <svg class="i"><use href="#i-moon"/></svg>
+        </button>
+      </div>
+    </div>
   </header>
 
-  <main class="layout">
-    <!-- Step 1: Palette -->
-    <section class="panel" aria-labelledby="palette-heading">
-      <div class="panel-head">
-        <h2 id="palette-heading">[01] เลือกพาเลตสี (COLOR_THEME)</h2>
-        <input type="search" id="paletteSearch" placeholder="ค้นหาพาเลต..." aria-label="ค้นหาพาเลตสี" />
+  <main id="top">
+    <div class="wrap hero-wrap">
+      <section class="hero" aria-labelledby="heroTitle">
+        <div class="hero-fx" aria-hidden="true">
+          <i class="pulse" style="--x:14%;--y:28%"></i>
+          <i class="pulse" style="--x:86%;--y:70%;--dl:-1.8s"></i>
+          <i class="pulse" style="--x:70%;--y:20%;--dl:-3.2s"></i>
+        </div>
+        <div class="hero-grid">
+          <span class="eyebrow"><span class="dot"><svg class="i"><use href="#i-spark"/></svg></span>Health Prompt Studio</span>
+          <h1 id="heroTitle">สร้าง Master Prompt ภาพ<br /><span class="gt">สำหรับงานสุขภาพ &amp; ราชการไทย</span></h1>
+          <p class="lead">เลือกพาเลตสีที่ออกแบบมาเฉพาะงานสุขภาพและราชการ กำหนดเนื้อหา แล้วคัดลอก Master Prompt ตามโครงสร้าง [01]–[07] ไปใช้กับ Midjourney, DALL·E, Gemini หรือเครื่องมือ AI image อื่น ๆ ได้ทันที</p>
+          <div class="hsearch" role="search" id="heroSearch">
+            <svg class="i s-ico"><use href="#i-search"/></svg>
+            <label for="q" class="sr-only">ค้นหาพาเลตสี</label>
+            <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="ค้นหา เช่น Luxury, Medical, Government, Teal…" />
+            <span class="s-right"><button class="clear" id="qClear" type="button" aria-label="ล้างคำค้นหา" hidden><svg class="i"><use href="#i-x"/></svg></button></span>
+          </div>
+          <div class="quick" id="quick"><span>ยอดนิยม</span></div>
+          <div class="hstats" id="stats"></div>
+        </div>
+      </section>
+    </div>
+
+    <section class="wrap sec" id="cats" aria-labelledby="catsTitle">
+      <div class="sec-head">
+        <div>
+          <div class="kick">Categories</div>
+          <h2 id="catsTitle">เลือกตามหมวดหมู่สี</h2>
+          <p>ครอบคลุมตั้งแต่งานสุขภาพในชีวิตประจำวัน จนถึงรายงานราชการระดับลักชัวรี</p>
+        </div>
       </div>
-      <div id="categoryTabs" class="category-tabs" role="tablist" aria-label="หมวดพาเลตสี"></div>
-      <div id="paletteGrid" class="palette-grid" role="listbox" aria-label="รายการพาเลตสี"></div>
+      <div class="bento" id="tiles"></div>
     </section>
 
-    <!-- Step 2: Config -->
-    <section class="panel" aria-labelledby="config-heading">
-      <h2 id="config-heading">[02]–[06] กำหนดเนื้อหา &amp; รูปแบบ</h2>
-
-      <label class="field">
-        <span>CONTENT — หัวข้อ/เนื้อหาหลัก</span>
-        <textarea id="contentInput" rows="2" placeholder="เช่น ปกรายงานประจำปี งานสาธารณสุขปฐมภูมิ จังหวัดนราธิวาส"></textarea>
-      </label>
-
-      <div class="field-row">
-        <label class="field">
-          <span>CONTENT_TYPE — ประเภทเนื้อหา</span>
-          <select id="contentType">
-            <option value="Book / Report Cover">ปกหนังสือ / ปกรายงาน</option>
-            <option value="Poster">โปสเตอร์</option>
-            <option value="Infographic">อินโฟกราฟิก</option>
-            <option value="Dashboard / Data Visual">แดชบอร์ด / ข้อมูลเชิงภาพ</option>
-            <option value="Certificate / Document Header">ประกาศเกียรติคุณ / หัวเอกสาร</option>
-          </select>
-        </label>
-
-        <label class="field">
-          <span>ASPECT_RATIO — อัตราส่วนภาพ</span>
-          <select id="aspectRatio">
-            <option value="3:4 (Portrait Cover)">3:4 — ปกแนวตั้ง</option>
-            <option value="1:1 (Square)">1:1 — สี่เหลี่ยมจัตุรัส</option>
-            <option value="16:9 (Widescreen)">16:9 — จอกว้าง</option>
-            <option value="9:16 (Vertical Social)">9:16 — แนวตั้งโซเชียล</option>
-            <option value="A4 Portrait (210:297)">A4 — แนวตั้งเอกสาร</option>
-          </select>
-        </label>
+    <section class="wrap sec" id="results" aria-labelledby="resTitle">
+      <div class="pillbar"><div class="pills" id="pills" role="toolbar" aria-label="หมวดหมู่สี"></div></div>
+      <div class="res-head">
+        <div class="res-title"><h2 id="resTitle">พาเลตสีทั้งหมด</h2><span class="count" id="resCount"></span></div>
       </div>
+      <div class="grid" id="paletteGrid" role="listbox" aria-label="รายการพาเลตสี"></div>
+    </section>
 
-      <div class="field-row">
-        <label class="checkbox-field">
-          <input type="checkbox" id="includePeople" checked />
-          <span>รวมภาพบุคลากรสาธารณสุข</span>
-        </label>
-        <label class="checkbox-field">
-          <input type="checkbox" id="includeMetallic" checked />
-          <span>เอฟเฟกต์โลหะ/ทอง (ถ้าพาเลตมี)</span>
-        </label>
-      </div>
+    <section class="wrap sec" id="config" aria-labelledby="configTitle">
+      <div class="promo">
+        <div>
+          <div class="kick">Content &amp; Format</div>
+          <h2 id="configTitle">[01]–[06] กำหนดเนื้อหา &amp; รูปแบบ</h2>
 
-      <div class="field">
-        <span>STYLE_TAGS — มาตรฐานภาพที่บังคับใช้ทุกครั้ง</span>
-        <div id="styleTags" class="style-tags" aria-label="รายการมาตรฐานภาพที่บังคับใช้"></div>
+          <label class="field">
+            <span>CONTENT — หัวข้อ/เนื้อหาหลัก</span>
+            <textarea id="contentInput" rows="2" placeholder="เช่น ปกรายงานประจำปี งานสาธารณสุขปฐมภูมิ จังหวัดนราธิวาส"></textarea>
+          </label>
+
+          <div class="field-row">
+            <label class="field">
+              <span>CONTENT_TYPE — ประเภทเนื้อหา</span>
+              <select id="contentType">
+                <option value="Book / Report Cover">ปกหนังสือ / ปกรายงาน</option>
+                <option value="Poster">โปสเตอร์</option>
+                <option value="Infographic">อินโฟกราฟิก</option>
+                <option value="Dashboard / Data Visual">แดชบอร์ด / ข้อมูลเชิงภาพ</option>
+                <option value="Certificate / Document Header">ประกาศเกียรติคุณ / หัวเอกสาร</option>
+              </select>
+            </label>
+
+            <label class="field">
+              <span>ASPECT_RATIO — อัตราส่วนภาพ</span>
+              <select id="aspectRatio">
+                <option value="3:4 (Portrait Cover)">3:4 — ปกแนวตั้ง</option>
+                <option value="1:1 (Square)">1:1 — สี่เหลี่ยมจัตุรัส</option>
+                <option value="16:9 (Widescreen)">16:9 — จอกว้าง</option>
+                <option value="9:16 (Vertical Social)">9:16 — แนวตั้งโซเชียล</option>
+                <option value="A4 Portrait (210:297)">A4 — แนวตั้งเอกสาร</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="field-row">
+            <label class="checkbox-field">
+              <input type="checkbox" id="includePeople" checked />
+              <span>รวมภาพบุคลากรสาธารณสุข</span>
+            </label>
+            <label class="checkbox-field">
+              <input type="checkbox" id="includeMetallic" checked />
+              <span>เอฟเฟกต์โลหะ/ทอง (ถ้าพาเลตมี)</span>
+            </label>
+          </div>
+
+          <div class="field">
+            <span>STYLE_TAGS — มาตรฐานภาพที่บังคับใช้ทุกครั้ง</span>
+            <div id="styleTags" class="style-tags" aria-label="รายการมาตรฐานภาพที่บังคับใช้"></div>
+          </div>
+        </div>
+
+        <ol class="formula">
+          <li><b>01</b><span><strong>COLOR_THEME</strong> · พาเลตสีที่เลือกไว้</span></li>
+          <li><b>02</b><span><strong>Design Concept</strong> · แนวคิดการออกแบบโดยรวม</span></li>
+          <li><b>03</b><span><strong>Color System</strong> · ยึดสีจาก [01] เท่านั้น</span></li>
+          <li><b>04</b><span><strong>Composition</strong> · จัดวางและลำดับความสำคัญ</span></li>
+          <li><b>05</b><span><strong>Visual Direction</strong> · ภาพตามประเภทเนื้อหา</span></li>
+          <li><b>06</b><span><strong>Quality &amp; Output</strong> · มาตรฐานคุณภาพภาพ</span></li>
+          <li><b>07</b><span><strong>Negative Constraints</strong> · สิ่งที่ห้ามปรากฏ</span></li>
+        </ol>
       </div>
     </section>
 
-    <!-- Step 3: Live Preview with motion graphics -->
-    <section class="panel" aria-labelledby="preview-heading">
-      <h2 id="preview-heading">พรีวิวสด</h2>
+    <section class="wrap sec" id="preview" aria-labelledby="previewHeading">
+      <div class="sec-head"><div><div class="kick">Live Preview</div><h2 id="previewHeading">พรีวิวสด</h2></div></div>
       <div id="previewStage" class="preview-stage">
         <div class="preview-shimmer"></div>
         <div class="preview-particles">
@@ -97,14 +174,13 @@
       </div>
     </section>
 
-    <!-- Step 4: Output -->
-    <section class="panel" aria-labelledby="output-heading">
-      <div class="panel-head">
-        <h2 id="output-heading">[07] Master Prompt</h2>
+    <section class="wrap sec" id="output" aria-labelledby="outputHeading">
+      <div class="sec-head">
+        <div><div class="kick">Master Prompt</div><h2 id="outputHeading">[07] พร้อมคัดลอกใช้งาน</h2></div>
         <div class="output-actions">
-          <button id="copyBtn" type="button" class="btn btn-primary">คัดลอก</button>
-          <button id="exportJsonBtn" type="button" class="btn">Export JSON</button>
-          <button id="exportCssBtn" type="button" class="btn">Export CSS Vars</button>
+          <button id="copyBtn" type="button" class="btn dark"><svg class="i"><use href="#i-copy"/></svg>คัดลอก</button>
+          <button id="exportJsonBtn" type="button" class="btn sm"><svg class="i"><use href="#i-down"/></svg>Export JSON</button>
+          <button id="exportCssBtn" type="button" class="btn sm"><svg class="i"><use href="#i-down"/></svg>Export CSS</button>
         </div>
       </div>
       <textarea id="promptOutput" class="prompt-output" readonly aria-label="Master Prompt ที่สร้างขึ้น"></textarea>
@@ -112,8 +188,17 @@
     </section>
   </main>
 
-  <footer class="site-footer">
-    <p>Health Prompt Studio — เครื่องมือสร้างพรอมป์ AI สำหรับงานสุขภาพและราชการไทย</p>
+  <footer>
+    <div class="wrap">
+      <span class="brand" style="gap:10px">
+        <span class="logo" style="width:28px;height:28px;border-radius:9px"><svg class="i" style="width:15px;height:15px"><use href="#i-spark"/></svg></span>
+        <span class="brand-t"><b>Health Prompt Studio</b><small>เครื่องมือสร้างพรอมป์ AI สำหรับงานสุขภาพและราชการไทย</small></span>
+      </span>
+      <span style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn sm" type="button" id="footerExportJson"><svg class="i"><use href="#i-down"/></svg>ส่งออก JSON</button>
+        <button class="btn sm" type="button" id="footerExportCss"><svg class="i"><use href="#i-down"/></svg>ส่งออก CSS</button>
+      </span>
+    </div>
   </footer>
 
   <script src="script.js"></script>

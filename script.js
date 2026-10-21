@@ -43,18 +43,26 @@
     "Metallic Gold Reflection", "Sharp Focus", "High-end Editorial Design",
   ];
 
+  const POPULAR = ["Luxury Emerald & Gold", "Medical Blue", "Royal Navy & Gold", "Violet AI"];
+
   const LS_KEY = "healthPromptStudio.state.v1";
+  const THEME_KEY = "healthPromptStudio.theme";
 
   const els = {
-    search: document.getElementById("paletteSearch"),
-    tabs: document.getElementById("categoryTabs"),
+    heroSearch: document.getElementById("q"),
+    navSearch: document.getElementById("navSearch"),
+    qClear: document.getElementById("qClear"),
+    quick: document.getElementById("quick"),
+    stats: document.getElementById("stats"),
+    tiles: document.getElementById("tiles"),
+    pills: document.getElementById("pills"),
+    resCount: document.getElementById("resCount"),
     grid: document.getElementById("paletteGrid"),
     content: document.getElementById("contentInput"),
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
     includePeople: document.getElementById("includePeople"),
     includeMetallic: document.getElementById("includeMetallic"),
-    stage: document.getElementById("previewStage"),
     previewType: document.getElementById("previewType"),
     previewTitle: document.getElementById("previewTitle"),
     previewSwatches: document.getElementById("previewSwatches"),
@@ -64,7 +72,11 @@
     copyStatus: document.getElementById("copyStatus"),
     exportJsonBtn: document.getElementById("exportJsonBtn"),
     exportCssBtn: document.getElementById("exportCssBtn"),
+    footerExportJson: document.getElementById("footerExportJson"),
+    footerExportCss: document.getElementById("footerExportCss"),
     styleTags: document.getElementById("styleTags"),
+    themeBtn: document.getElementById("themeBtn"),
+    nav: document.getElementById("nav"),
   };
 
   let state = {
@@ -94,40 +106,77 @@
   }
 
   function categories() {
-    return ["All", ...Array.from(new Set(PALETTES.map((p) => p.category)))];
+    return Array.from(new Set(PALETTES.map((p) => p.category)));
   }
 
-  function renderTabs() {
-    els.tabs.innerHTML = "";
-    categories().forEach((cat) => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.textContent = cat;
-      btn.role = "tab";
-      btn.setAttribute("aria-selected", String(state.category === cat));
-      btn.addEventListener("click", () => {
-        state.category = cat;
-        renderTabs();
-        renderGrid();
-        saveState();
-      });
-      els.tabs.appendChild(btn);
-    });
+  function categoryGradient(cat) {
+    const sample = PALETTES.find((p) => p.category === cat);
+    return `linear-gradient(135deg, ${sample.colors.primary}, ${sample.colors.metallic})`;
   }
 
-  function renderGrid() {
+  function filteredPalettes() {
     const q = state.query.trim().toLowerCase();
-    const list = PALETTES.filter((p) => {
+    return PALETTES.filter((p) => {
       const matchCat = state.category === "All" || p.category === state.category;
       const matchQuery = !q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
       return matchCat && matchQuery;
     });
+  }
 
+  function setCategory(cat) {
+    state.category = cat;
+    renderTiles();
+    renderPills();
+    renderGrid();
+    saveState();
+  }
+
+  function renderTiles() {
+    els.tiles.innerHTML = "";
+    categories().forEach((cat) => {
+      const count = PALETTES.filter((p) => p.category === cat).length;
+      const tile = document.createElement("button");
+      tile.type = "button";
+      tile.className = "tile";
+      tile.style.setProperty("--g", categoryGradient(cat));
+      tile.setAttribute("aria-pressed", String(state.category === cat));
+      tile.innerHTML = `
+        <div class="tile-top">
+          <span class="gico"><svg class="i"><use href="#i-palette"/></svg></span>
+          <span class="num">${count}<small>พาเลต</small></span>
+        </div>
+        <h3>${cat}</h3>
+      `;
+      tile.addEventListener("click", () => {
+        setCategory(cat);
+        document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      els.tiles.appendChild(tile);
+    });
+  }
+
+  function renderPills() {
+    els.pills.innerHTML = "";
+    ["All", ...categories()].forEach((cat) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "pill-btn";
+      btn.textContent = cat === "All" ? "ทั้งหมด" : cat;
+      btn.setAttribute("role", "tab");
+      btn.setAttribute("aria-selected", String(state.category === cat));
+      btn.addEventListener("click", () => setCategory(cat));
+      els.pills.appendChild(btn);
+    });
+  }
+
+  function renderGrid() {
+    const list = filteredPalettes();
+    els.resCount.textContent = `${list.length} พาเลต`;
     els.grid.innerHTML = "";
     list.forEach((p) => {
       const card = document.createElement("button");
       card.type = "button";
-      card.className = "palette-card";
+      card.className = "card palette-card";
       card.setAttribute("role", "option");
       card.setAttribute("aria-selected", String(p.id === state.paletteId));
       card.innerHTML = `
@@ -160,13 +209,43 @@
     root.setProperty("--p-tertiary", p.tertiary);
     root.setProperty("--p-metallic", p.metallic);
     root.setProperty("--p-bg", p.bg);
-    root.setProperty("--accent", p.primary);
   }
 
   function renderStyleTags() {
     els.styleTags.innerHTML = STYLE_TAGS
       .map((t) => `<span class="tag">${t}</span>`)
       .join("");
+  }
+
+  function renderStats() {
+    const cats = categories();
+    els.stats.innerHTML = `
+      <div><b>${PALETTES.length}</b><small>พาเลตสี</small></div>
+      <div><b>${cats.length}</b><small>หมวดหมู่</small></div>
+      <div><b>07</b><small>ส่วนโครงสร้างพรอมป์</small></div>
+      <div><b>Local</b><small>ไม่ส่งข้อมูลออกเซิร์ฟเวอร์</small></div>
+    `;
+  }
+
+  function renderQuick() {
+    els.quick.innerHTML = '<span>ยอดนิยม</span>' + POPULAR
+      .map((name) => `<button type="button" data-name="${name}">${name}</button>`)
+      .join("");
+    els.quick.querySelectorAll("button[data-name]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        setQuery(btn.dataset.name);
+      });
+    });
+  }
+
+  function setQuery(value) {
+    state.query = value;
+    els.heroSearch.value = value;
+    els.navSearch.value = value;
+    els.qClear.hidden = !value;
+    renderGrid();
+    saveState();
+    document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function renderPreview() {
@@ -257,11 +336,45 @@ FINAL RULE: All visual color decisions must derive from the single COLOR_THEME c
     setTimeout(() => { els.copyStatus.textContent = ""; }, 2200);
   }
 
+  function applyTheme(theme) {
+    if (theme === "light" || theme === "dark") {
+      document.documentElement.setAttribute("data-theme", theme);
+    } else {
+      document.documentElement.removeAttribute("data-theme");
+    }
+    updateThemeIcon();
+  }
+
+  function updateThemeIcon() {
+    const use = els.themeBtn.querySelector("use");
+    if (use) use.setAttribute("href", currentIsDark() ? "#i-sun" : "#i-moon");
+  }
+
+  function currentIsDark() {
+    const explicit = document.documentElement.getAttribute("data-theme");
+    if (explicit) return explicit === "dark";
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
+  function toggleTheme() {
+    const next = currentIsDark() ? "light" : "dark";
+    applyTheme(next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (_) { /* storage unavailable */ }
+  }
+
   function bindEvents() {
-    els.search.addEventListener("input", (e) => {
-      state.query = e.target.value;
-      renderGrid();
+    [els.heroSearch, els.navSearch].forEach((input) => {
+      input.addEventListener("input", (e) => {
+        state.query = e.target.value;
+        const other = e.target === els.heroSearch ? els.navSearch : els.heroSearch;
+        other.value = e.target.value;
+        els.qClear.hidden = !e.target.value;
+        renderGrid();
+        saveState();
+      });
     });
+    els.qClear.addEventListener("click", () => setQuery(""));
+
     els.content.addEventListener("input", (e) => {
       state.content = e.target.value;
       renderPreview();
@@ -293,6 +406,19 @@ FINAL RULE: All visual color decisions must derive from the single COLOR_THEME c
     els.copyBtn.addEventListener("click", copyPrompt);
     els.exportJsonBtn.addEventListener("click", exportJson);
     els.exportCssBtn.addEventListener("click", exportCssVars);
+    els.footerExportJson.addEventListener("click", exportJson);
+    els.footerExportCss.addEventListener("click", exportCssVars);
+    els.themeBtn.addEventListener("click", toggleTheme);
+
+    document.querySelectorAll("[data-goto]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.getElementById(btn.dataset.goto)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    });
+
+    window.addEventListener("scroll", () => {
+      els.nav.classList.toggle("scrolled", window.scrollY > 8);
+    }, { passive: true });
   }
 
   function restoreFormFromState() {
@@ -301,14 +427,25 @@ FINAL RULE: All visual color decisions must derive from the single COLOR_THEME c
     els.aspectRatio.value = state.aspectRatio;
     els.includePeople.checked = state.includePeople;
     els.includeMetallic.checked = state.includeMetallic;
-    els.search.value = state.query || "";
+    els.heroSearch.value = state.query || "";
+    els.navSearch.value = state.query || "";
+    els.qClear.hidden = !state.query;
   }
 
   function init() {
+    try {
+      const savedTheme = localStorage.getItem(THEME_KEY);
+      if (savedTheme) applyTheme(savedTheme);
+    } catch (_) { /* storage unavailable */ }
+
+    updateThemeIcon();
     loadState();
     restoreFormFromState();
     renderStyleTags();
-    renderTabs();
+    renderStats();
+    renderQuick();
+    renderTiles();
+    renderPills();
     renderGrid();
     applyPaletteToUI();
     renderPreview();
