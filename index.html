@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Health Prompt Studio</title>
+<meta name="description" content="สร้าง AI image prompt สำหรับงานสุขภาพและราชการไทยแบบมืออาชีพ พร้อมเลือกพาเลตสี ประเภทเนื้อหา และอัตราส่วนภาพ" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="bg-motion" aria-hidden="true">
+    <span class="orb orb-1"></span>
+    <span class="orb orb-2"></span>
+    <span class="orb orb-3"></span>
+  </div>
+
+  <header class="site-header">
+    <h1>Health Prompt Studio</h1>
+    <p class="subtitle">สร้าง Master Prompt สำหรับงานสุขภาพ/ราชการไทยระดับพรีเมียม — เลือกพาเลตสี กำหนดเนื้อหา แล้วคัดลอกไปใช้กับ AI Image Generator</p>
+  </header>
+
+  <main class="layout">
+    <!-- Step 1: Palette -->
+    <section class="panel" aria-labelledby="palette-heading">
+      <div class="panel-head">
+        <h2 id="palette-heading">[01] เลือกพาเลตสี (COLOR_THEME)</h2>
+        <input type="search" id="paletteSearch" placeholder="ค้นหาพาเลต..." aria-label="ค้นหาพาเลตสี" />
+      </div>
+      <div id="categoryTabs" class="category-tabs" role="tablist" aria-label="หมวดพาเลตสี"></div>
+      <div id="paletteGrid" class="palette-grid" role="listbox" aria-label="รายการพาเลตสี"></div>
+    </section>
+
+    <!-- Step 2: Config -->
+    <section class="panel" aria-labelledby="config-heading">
+      <h2 id="config-heading">[02]–[06] กำหนดเนื้อหา &amp; รูปแบบ</h2>
+
+      <label class="field">
+        <span>CONTENT — หัวข้อ/เนื้อหาหลัก</span>
+        <textarea id="contentInput" rows="2" placeholder="เช่น ปกรายงานประจำปี งานสาธารณสุขปฐมภูมิ จังหวัดนราธิวาส"></textarea>
+      </label>
+
+      <div class="field-row">
+        <label class="field">
+          <span>CONTENT_TYPE — ประเภทเนื้อหา</span>
+          <select id="contentType">
+            <option value="Book / Report Cover">ปกหนังสือ / ปกรายงาน</option>
+            <option value="Poster">โปสเตอร์</option>
+            <option value="Infographic">อินโฟกราฟิก</option>
+            <option value="Dashboard / Data Visual">แดชบอร์ด / ข้อมูลเชิงภาพ</option>
+            <option value="Certificate / Document Header">ประกาศเกียรติคุณ / หัวเอกสาร</option>
+          </select>
+        </label>
+
+        <label class="field">
+          <span>ASPECT_RATIO — อัตราส่วนภาพ</span>
+          <select id="aspectRatio">
+            <option value="3:4 (Portrait Cover)">3:4 — ปกแนวตั้ง</option>
+            <option value="1:1 (Square)">1:1 — สี่เหลี่ยมจัตุรัส</option>
+            <option value="16:9 (Widescreen)">16:9 — จอกว้าง</option>
+            <option value="9:16 (Vertical Social)">9:16 — แนวตั้งโซเชียล</option>
+            <option value="A4 Portrait (210:297)">A4 — แนวตั้งเอกสาร</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="field-row">
+        <label class="checkbox-field">
+          <input type="checkbox" id="includePeople" checked />
+          <span>รวมภาพบุคลากรสาธารณสุข</span>
+        </label>
+        <label class="checkbox-field">
+          <input type="checkbox" id="includeMetallic" checked />
+          <span>เอฟเฟกต์โลหะ/ทอง (ถ้าพาเลตมี)</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Step 3: Live Preview with motion graphics -->
+    <section class="panel" aria-labelledby="preview-heading">
+      <h2 id="preview-heading">พรีวิวสด</h2>
+      <div id="previewStage" class="preview-stage">
+        <div class="preview-shimmer"></div>
+        <div class="preview-particles">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+        <div class="preview-content">
+          <p class="preview-eyebrow" id="previewType">BOOK / REPORT COVER</p>
+          <h3 class="preview-title" id="previewTitle">หัวข้อของคุณจะแสดงที่นี่</h3>
+          <div class="preview-swatch-row" id="previewSwatches"></div>
+          <p class="preview-ratio" id="previewRatio">3:4</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Step 4: Output -->
+    <section class="panel" aria-labelledby="output-heading">
+      <div class="panel-head">
+        <h2 id="output-heading">[07] Master Prompt</h2>
+        <div class="output-actions">
+          <button id="copyBtn" type="button" class="btn btn-primary">คัดลอก</button>
+          <button id="exportJsonBtn" type="button" class="btn">Export JSON</button>
+          <button id="exportCssBtn" type="button" class="btn">Export CSS Vars</button>
+        </div>
+      </div>
+      <textarea id="promptOutput" class="prompt-output" readonly aria-label="Master Prompt ที่สร้างขึ้น"></textarea>
+      <p id="copyStatus" class="copy-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>Health Prompt Studio — เครื่องมือสร้างพรอมป์ AI สำหรับงานสุขภาพและราชการไทย</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
