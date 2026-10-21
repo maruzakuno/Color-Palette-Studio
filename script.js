@@ -30,7 +30,10 @@
       colors: { primary: "#ea580c", secondary: "#9a3412", tertiary: "#fb923c", metallic: "#fed7aa", bg: "#fff8f2" } },
     { id: "deep-sapphire-silver", name: "Deep Sapphire & Silver", category: "Government Luxury",
       colors: { primary: "#1e3a8a", secondary: "#172554", tertiary: "#3b82f6", metallic: "#cbd5e1", bg: "#f6f8fc" } },
+    { id: "vibrant-gradient", name: "Vibrant Gradient", category: "Vibrant Gradient",
+      colors: { primary: "#ff5e62", secondary: "#c724b1", tertiary: "#2dd4ff", metallic: "#ffd93d", bg: "#fffaf5" } },
   ];
+
 
   const STYLE_TAGS = [
     "Premium Thai HEALTH Cover style", "Cinematic Photography", "Ultra Photorealistic",
@@ -61,6 +64,7 @@
     content: document.getElementById("contentInput"),
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
+    backgroundPattern: document.getElementById("backgroundPattern"),
     includePeople: document.getElementById("includePeople"),
     includeMetallic: document.getElementById("includeMetallic"),
     previewType: document.getElementById("previewType"),
@@ -86,6 +90,7 @@
     content: "",
     contentType: els.contentType.value,
     aspectRatio: els.aspectRatio.value,
+    backgroundPattern: els.backgroundPattern.value,
     includePeople: true,
     includeMetallic: true,
   };
@@ -275,6 +280,7 @@ COLOR_THEME = "${p.name}" — Primary ${c.primary}, Secondary ${c.secondary}, Te
 CONTENT = "${state.content.trim()}"
 CONTENT_TYPE = "${state.contentType}"
 ASPECT_RATIO = "${state.aspectRatio}"
+BACKGROUND_PATTERN = "${state.backgroundPattern || "None — flat background"}"
 
 [02] DESIGN CONCEPT
 Create a world-class premium Thai educational and government visual composition. Combine Premium Thai Educational Report, Luxury Academic Cover, Elegant Government Report, and high-end editorial design. The result must be sophisticated, modern, clean, visually impressive, credible, and suitable for professional healthcare communication.
@@ -284,6 +290,7 @@ Use ONLY the palette defined in COLOR_THEME [01] as the controlling theme. Apply
 
 [04] COMPOSITION & VISUAL HIERARCHY
 Establish a striking primary focal point, elegant headline area, well-balanced secondary information, clean supporting details, generous negative space, disciplined grid alignment, and clear visual hierarchy. Use premium typography with precise Thai character shaping, correct vowels, tone marks, spelling, and line breaks. Do not invent names, dates, numbers, institutions, statistics, medical claims, or logos.
+${state.backgroundPattern ? `Background treatment: Apply ${state.backgroundPattern} as a subtle decorative background layer, rendered in tonal variations of COLOR_THEME [01] only, kept low-contrast so it never competes with foreground text or subjects.` : "Background treatment: Keep the background flat and clean with no decorative pattern."}
 
 [05] ADAPTIVE VISUAL DIRECTION
 Select subject-appropriate imagery and illustrations based on CONTENT. ${peopleLine} For infographics and dashboards, prioritize data legibility and clean chart structures. Use sharp typography zones, cinematic lighting, sophisticated depth, and cohesive composition.
@@ -395,6 +402,11 @@ FINAL RULE: All visual color decisions must derive from the single COLOR_THEME c
       renderPrompt();
       saveState();
     });
+    els.backgroundPattern.addEventListener("change", (e) => {
+      state.backgroundPattern = e.target.value;
+      renderPrompt();
+      saveState();
+    });
     els.includePeople.addEventListener("change", (e) => {
       state.includePeople = e.target.checked;
       renderPrompt();
@@ -427,6 +439,7 @@ FINAL RULE: All visual color decisions must derive from the single COLOR_THEME c
     els.content.value = state.content || "";
     els.contentType.value = state.contentType;
     els.aspectRatio.value = state.aspectRatio;
+    els.backgroundPattern.value = state.backgroundPattern || "";
     els.includePeople.checked = state.includePeople;
     els.includeMetallic.checked = state.includeMetallic;
     els.heroSearch.value = state.query || "";
