@@ -248,3 +248,5 @@ textarea:focus, select:focus { outline: none; border-color: var(--focus); box-sh
 footer { padding: 26px 0 40px; }
 footer .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 24px; }
 footer .brand-t small { color: var(--muted); }
+footer .credit { display: block; border-top: 0; padding-top: 14px; text-align: center; }
+footer .credit p { margin: 0; color: var(--faint); font-size: 12px; line-height: 1.7; }
