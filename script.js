@@ -32,6 +32,56 @@
       colors: { primary: "#1e3a8a", secondary: "#172554", tertiary: "#3b82f6", metallic: "#cbd5e1", bg: "#f6f8fc" } },
     { id: "vibrant-gradient", name: "Vibrant Gradient", category: "Vibrant Gradient",
       colors: { primary: "#ff5e62", secondary: "#c724b1", tertiary: "#2dd4ff", metallic: "#ffd93d", bg: "#fffaf5" } },
+
+    // กลุ่มที่ 1: กระตุ้นความสนใจและพลังงาน
+    { id: "red-yellow", name: "แดง - เหลือง (Red & Yellow)", category: "กระตุ้นความสนใจและพลังงาน",
+      colors: { primary: "#dc2626", secondary: "#facc15", tertiary: "#f97316", metallic: "#fde047", bg: "#fff8e1" } },
+    { id: "orange-black", name: "ส้ม - ดำ (Orange & Black)", category: "กระตุ้นความสนใจและพลังงาน",
+      colors: { primary: "#f97316", secondary: "#111827", tertiary: "#fb923c", metallic: "#9ca3af", bg: "#fff7ed" } },
+    { id: "coral-white", name: "คอรัลสว่าง - ขาว (Vibrant Coral & White)", category: "กระตุ้นความสนใจและพลังงาน",
+      colors: { primary: "#ff6b6b", secondary: "#f8fafc", tertiary: "#ff8787", metallic: "#ffd6d6", bg: "#fff5f5" } },
+    { id: "neon-green-darkgrey", name: "เขียวนีออน - เทาเข้ม (Neon Green & Dark Grey)", category: "กระตุ้นความสนใจและพลังงาน",
+      colors: { primary: "#4ade80", secondary: "#27272a", tertiary: "#22c55e", metallic: "#a3e635", bg: "#f3f4f6" } },
+
+    // กลุ่มที่ 2: หรูหราและพรีเมียม
+    { id: "powderblue-softwhite", name: "ฟ้าพาสเทล - ขาวนวล (Powder Blue & Soft White)", category: "หรูหราและพรีเมียม",
+      colors: { primary: "#b0e0e6", secondary: "#fdfaf6", tertiary: "#7ec8e3", metallic: "#cbe8f0", bg: "#fefcf9" } },
+    { id: "champagnegold-cream", name: "ทองแชมเปญ - ครีม (Champagne Gold & Cream)", category: "หรูหราและพรีเมียม",
+      colors: { primary: "#e9c46a", secondary: "#fff8e7", tertiary: "#f4e4ba", metallic: "#d4af37", bg: "#fffaf0" } },
+    { id: "emerald-gold-classic", name: "เขียวมรกต - ทอง (Emerald Green & Gold)", category: "หรูหราและพรีเมียม",
+      colors: { primary: "#0f9d58", secondary: "#065f46", tertiary: "#10b981", metallic: "#d4af37", bg: "#f0fdf4" } },
+    { id: "charcoal-rosegold", name: "ชาร์โคล - โรสโกลด์ (Charcoal & Rose Gold)", category: "หรูหราและพรีเมียม",
+      colors: { primary: "#36454f", secondary: "#b76e79", tertiary: "#4b5563", metallic: "#e8b4b8", bg: "#fdf6f3" } },
+    { id: "black-metallicsilver", name: "ดำ - เงินเมทัลลิก (Black & Metallic Silver)", category: "หรูหราและพรีเมียม",
+      colors: { primary: "#0a0a0a", secondary: "#c0c0c0", tertiary: "#27272a", metallic: "#d1d5db", bg: "#f5f5f5" } },
+
+    // กลุ่มที่ 3: น่าเชื่อถือและเทคโนโลยี
+    { id: "navyblue-white", name: "กรมท่า - ขาว (Navy Blue & White)", category: "น่าเชื่อถือและเทคโนโลยี",
+      colors: { primary: "#1e3a8a", secondary: "#f8fafc", tertiary: "#3b5998", metallic: "#93c5fd", bg: "#f6f8fc" } },
+    { id: "teal-crispwhite", name: "ทีล - ขาวสะอาด (Teal & Crisp White)", category: "น่าเชื่อถือและเทคโนโลยี",
+      colors: { primary: "#14b8a6", secondary: "#f8fffe", tertiary: "#2dd4bf", metallic: "#5eead4", bg: "#f0fdfa" } },
+    { id: "skyblue-lightgrey", name: "ฟ้าสกายบลู - เทาอ่อน (Sky Blue & Light Grey)", category: "น่าเชื่อถือและเทคโนโลยี",
+      colors: { primary: "#38bdf8", secondary: "#e5e7eb", tertiary: "#7dd3fc", metallic: "#bae6fd", bg: "#f7fafc" } },
+    { id: "indigo-pearlwhite", name: "คราม - ขาวมุก (Indigo & Pearl White)", category: "น่าเชื่อถือและเทคโนโลยี",
+      colors: { primary: "#4338ca", secondary: "#f5f3ff", tertiary: "#6366f1", metallic: "#c7d2fe", bg: "#f8f7ff" } },
+
+    // กลุ่มที่ 4: ธรรมชาติและออร์แกนิก
+    { id: "sagegreen-beige", name: "เขียวเซจ - เบจ (Sage Green & Beige)", category: "ธรรมชาติและออร์แกนิก",
+      colors: { primary: "#87a96b", secondary: "#e8dcc8", tertiary: "#a3b18a", metallic: "#ddbea9", bg: "#faf6f0" } },
+    { id: "terracotta-warmwhite", name: "เทอร์ราคอตตา - ขาววอร์มไวท์ (Terracotta & Warm White)", category: "ธรรมชาติและออร์แกนิก",
+      colors: { primary: "#e2725b", secondary: "#fdf6ec", tertiary: "#cb6843", metallic: "#f0c9a0", bg: "#fdf8f3" } },
+    { id: "olivegreen-woodbrown", name: "เขียวโอลีฟ - น้ำตาลไม้ (Olive Green & Wood Brown)", category: "ธรรมชาติและออร์แกนิก",
+      colors: { primary: "#6b7a3a", secondary: "#6f4e37", tertiary: "#808000", metallic: "#c8a165", bg: "#f5f1e6" } },
+    { id: "mustard-forestgreen", name: "เหลืองมัสตาร์ด - เขียวป่า (Mustard Yellow & Forest Green)", category: "ธรรมชาติและออร์แกนิก",
+      colors: { primary: "#e3a008", secondary: "#1b4332", tertiary: "#ffc300", metallic: "#d4a017", bg: "#faf6e9" } },
+
+    // กลุ่มที่ 5: นุ่มนวลและเป็นมิตร
+    { id: "millennialpink-softgrey", name: "ชมพูมิลเลนเนียล - เทาอ่อน (Millennial Pink & Soft Grey)", category: "นุ่มนวลและเป็นมิตร",
+      colors: { primary: "#f4c2c2", secondary: "#d9d9d9", tertiary: "#f8b4b4", metallic: "#fcdada", bg: "#fdf7f7" } },
+    { id: "lavender-mint", name: "ลาเวนเดอร์ - มินต์ (Lavender & Mint)", category: "นุ่มนวลและเป็นมิตร",
+      colors: { primary: "#b497d6", secondary: "#98ddca", tertiary: "#c9a6e0", metallic: "#a8e6cf", bg: "#faf6ff" } },
+    { id: "peach-pastelyellow", name: "พีช - เหลืองพาสเทล (Peach & Pastel Yellow)", category: "นุ่มนวลและเป็นมิตร",
+      colors: { primary: "#ffb6a3", secondary: "#fff3a3", tertiary: "#ffcab0", metallic: "#ffe9a8", bg: "#fffaf0" } },
   ];
 
 
