@@ -745,6 +745,22 @@ No mismatched color palettes, accidental default blue-gold decoration unless spe
 
 NEGATIVE PROMPT: Distorted Thai characters, misspelled words, hallucinated data, deformed maps, swapped district boundaries, unreadable tables, blurred numbers, disproportionate logos, cluttered layout, messy composition, low resolution, flat design, cartoonish style, bad anatomy, distorted doctor, unreadable text, oversaturated colors, cheap template aesthetics, random English gibberish, watermarks, extra logos, redundant graphic elements, grainy texture, artifacts.
 
+[08] THAI TEXT ACCURACY & QUALITY STANDARD
+1. 100% Thai Text Accuracy: All Thai text must strictly follow the official Thai spelling, grammar, orthography, and dictionary standards established by the Royal Society of Thailand.
+2. Exact Original Text Preservation: Preserve all original words, sentences, numbers, punctuation marks, and formatting exactly as provided. Do not modify, rewrite, add, remove, rearrange, embellish, or fabricate any text.
+3. Correct Thai Character Structure: Ensure that every Thai consonant, vowel, tone mark, diacritic, and punctuation mark is accurately formed, correctly positioned, and properly aligned according to Thai writing standards.
+4. Zero Text Distortion: No misspelled words, malformed characters, missing letters, duplicated characters, overlapping text, misplaced vowels, incorrect tone marks, or distorted typography.
+5. Ultra-Sharp Typography: All text must be exceptionally clear, highly legible, precisely rendered, and perfectly defined, with crisp, clean character edges and professional typography.
+6. No Blur or Haze: All images and text must remain completely sharp and clear. No blurring, haziness, softness, ghosting, motion blur, or unwanted diffusion.
+7. High-Resolution Image Quality: Produce high-resolution, ultra-detailed, tack-sharp visuals with clean edges, accurate proportions, and professional print-ready quality.
+8. Zero Visual Artifacts: No pixelation, digital noise, compression artifacts, duplicated elements, warped objects, distorted letters, or unintended visual imperfections.
+9. No Text Embellishment: Do not apply decorative effects, excessive glow, shadows, reflections, gradients, or artistic filters that reduce text clarity, readability, or accuracy.
+10. Strict Original Content Integrity: Maintain the exact meaning, spelling, sequence, structure, and authenticity of all original content without alteration or creative interpretation.
+11. Professional Layout and Alignment: Maintain consistent spacing, precise alignment, balanced typography, proper line breaks, and clean text placement without clipping or overlapping elements.
+12. Maximum Readability Priority: Text accuracy, character integrity, image sharpness, and readability must always take precedence over decorative effects, artistic styling, and visual enhancements.
+13. Final Quality Verification: Carefully inspect every word, character, vowel, tone mark, number, punctuation mark, and image detail before final output. Correct any detected error without modifying the intended original content.
+14. Zero-Tolerance Quality Standard: The final output must contain no detectable spelling errors, malformed Thai characters, missing text, blurred typography, image distortion, or unauthorized content modifications.
+
 FINAL RULE: All visual color decisions must derive from the single COLOR_THEME configuration in [01]. Never override it elsewhere in the prompt.
 
 CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
