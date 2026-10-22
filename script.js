@@ -8,6 +8,42 @@
     buildContentTypeGuidance,
   } = globalThis.HealthPromptContentTypes;
 
+  const ASPECT_RATIO_PROFILES = {
+    "3:4 (Portrait Cover)": {
+      resolution: "4080 × 5440 px",
+      printSpec: "300 DPI, print-ready portrait cover",
+      safeMargin: "10% safe margin on all sides; keep the title block within the center 80%",
+    },
+    "1:1 (Square)": {
+      resolution: "4096 × 4096 px",
+      printSpec: "300 DPI, square format",
+      safeMargin: "8% safe margin on all sides; keep the focal point centered for feed/thumbnail cropping",
+    },
+    "16:9 (Widescreen)": {
+      resolution: "7680 × 4320 px (8K UHD)",
+      printSpec: "300 DPI equivalent for large-format print; screen-ready otherwise",
+      safeMargin: "6% safe margin; protect the outer 10% left/right for ultrawide or projector cropping",
+    },
+    "9:16 (Vertical Social)": {
+      resolution: "4320 × 7680 px (8K UHD vertical)",
+      printSpec: "Screen-ready; 300 DPI if printed as a roll-up/standee",
+      safeMargin: "12% safe margin top and bottom to avoid app UI overlays (captions, buttons, progress bars)",
+    },
+    "A4 Portrait (210:297)": {
+      resolution: "2480 × 3508 px (A4 @ 300 DPI)",
+      printSpec: "300 DPI, CMYK-ready, A4 (210×297mm)",
+      safeMargin: "15mm bleed-safe margin on all sides for print trimming",
+    },
+  };
+
+  function getAspectRatioProfile(value) {
+    return ASPECT_RATIO_PROFILES[value] || {
+      resolution: "High-resolution, format-appropriate output",
+      printSpec: "300 DPI when printed; screen-ready otherwise",
+      safeMargin: "10% safe margin on all sides",
+    };
+  }
+
   const PALETTES = [
     { id: "medical-blue", name: "Medical Blue", category: "Healthcare",
       colors: { primary: "#1d4ed8", secondary: "#1e3a8a", tertiary: "#60a5fa", metallic: "#93c5fd", bg: "#f5f8ff" } },
@@ -725,6 +761,7 @@
     const p = getPalette();
     const c = p.colors;
     const typeGuidance = buildContentTypeGuidance(state.contentType);
+    const ratioProfile = getAspectRatioProfile(state.aspectRatio);
     const metallicLine = state.includeMetallic
       ? `Metallic Gold/Silver accents may be used if present in the palette (${c.metallic}), applied to borders, ribbons, and decorative details only.`
       : `No metallic effects — keep all surfaces matte and flat within the palette tones.`;
@@ -740,6 +777,9 @@ COLOR_THEME = "${p.name}" — Primary ${c.primary}, Secondary ${c.secondary}, Te
 CONTENT = "${state.content.trim()}"
 CONTENT_TYPE = "${state.contentType}"
 ASPECT_RATIO = "${state.aspectRatio}"
+TARGET_RESOLUTION = "${ratioProfile.resolution}"
+PRINT_SPEC = "${ratioProfile.printSpec}"
+SAFE_MARGIN = "${ratioProfile.safeMargin}"
 BACKGROUND_PATTERN = "${state.backgroundPattern || "None — flat background"}"
 DEPARTMENT = "${state.department || "ไม่ระบุกลุ่มงาน"}"
 ACCENT_TONE = "${state.toneIndex !== null ? `${toneColorsOf(p)[state.toneIndex]} (${TONE_ROLE_LABELS[TONE_ROLES[state.toneIndex]]} tone of this palette)` : "Not set — use palette colors as-is"}"
@@ -763,7 +803,7 @@ Select subject-appropriate imagery and illustrations based on CONTENT. ${peopleL
 ${state.artStyle ? `Render characters and subjects in the ART_STYLE defined in [01]: "${state.artStyle}". Keep this rendering style consistent across every figure, prop, and illustrated element in the frame.` : "No specific ART_STYLE selected — default to photorealistic, editorial-quality rendering."}
 
 [06] QUALITY & OUTPUT
-Ultra-realistic, masterpiece, highly detailed, cinematic lighting, professional magazine quality, high-end editorial finishing, production-grade visual presentation, intended 8K aesthetic. Compose for the exact ASPECT_RATIO selected in [01]. For professional print, use an appropriate high-resolution export and 300 DPI metadata when available.
+Ultra-realistic, masterpiece, highly detailed, cinematic lighting, professional magazine quality, high-end editorial finishing, production-grade visual presentation, intended 8K aesthetic. Compose for the exact ASPECT_RATIO selected in [01] at TARGET_RESOLUTION ${ratioProfile.resolution}. Output specification: ${ratioProfile.printSpec}. Respect SAFE_MARGIN: ${ratioProfile.safeMargin}.
 Style standard: ${STYLE_TAGS.join(" / ")}.
 
 [07] NEGATIVE CONSTRAINTS
