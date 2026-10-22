@@ -1,6 +1,13 @@
 (() => {
   "use strict";
 
+  const {
+    CONTENT_TYPE_GROUPS,
+    DEFAULT_CONTENT_TYPE,
+    normalizeContentType,
+    buildContentTypeGuidance,
+  } = globalThis.HealthPromptContentTypes;
+
   const PALETTES = [
     { id: "medical-blue", name: "Medical Blue", category: "Healthcare",
       colors: { primary: "#1d4ed8", secondary: "#1e3a8a", tertiary: "#60a5fa", metallic: "#93c5fd", bg: "#f5f8ff" } },
@@ -496,7 +503,7 @@
     category: "All",
     query: "",
     content: "",
-    contentType: els.contentType.value,
+    contentType: DEFAULT_CONTENT_TYPE,
     aspectRatio: els.aspectRatio.value,
     backgroundPattern: els.backgroundPattern.value,
     artStyle: els.artStyle.value,
@@ -511,6 +518,7 @@
       const saved = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
       state = { ...state, ...saved };
     } catch (_) { /* ignore corrupt storage */ }
+    state.contentType = normalizeContentType(state.contentType);
   }
 
   function saveState() {
@@ -652,6 +660,21 @@
     root.setProperty("--p-bg", p.bg);
   }
 
+  function renderContentTypeOptions() {
+    els.contentType.innerHTML = "";
+    CONTENT_TYPE_GROUPS.forEach((group) => {
+      const optgroup = document.createElement("optgroup");
+      optgroup.label = group.label;
+      group.types.forEach((type) => {
+        const option = document.createElement("option");
+        option.value = type.value;
+        option.textContent = type.label;
+        optgroup.appendChild(option);
+      });
+      els.contentType.appendChild(optgroup);
+    });
+  }
+
   function renderStyleTags() {
     els.styleTags.innerHTML = STYLE_TAGS
       .map((t) => `<span class="tag">${t}</span>`)
@@ -701,6 +724,7 @@
   function buildPrompt() {
     const p = getPalette();
     const c = p.colors;
+    const typeGuidance = buildContentTypeGuidance(state.contentType);
     const metallicLine = state.includeMetallic
       ? `Metallic Gold/Silver accents may be used if present in the palette (${c.metallic}), applied to borders, ribbons, and decorative details only.`
       : `No metallic effects — keep all surfaces matte and flat within the palette tones.`;
@@ -720,6 +744,7 @@ BACKGROUND_PATTERN = "${state.backgroundPattern || "None — flat background"}"
 DEPARTMENT = "${state.department || "ไม่ระบุกลุ่มงาน"}"
 ACCENT_TONE = "${state.toneIndex !== null ? `${toneColorsOf(p)[state.toneIndex]} (${TONE_ROLE_LABELS[TONE_ROLES[state.toneIndex]]} tone of this palette)` : "Not set — use palette colors as-is"}"
 ART_STYLE = "${state.artStyle || "Not set — default to photorealistic editorial rendering"}"
+${typeGuidance.configuration}
 
 [02] DESIGN CONCEPT
 Create a world-class premium Thai educational and government visual composition. Combine Premium Thai Educational Report, Luxury Academic Cover, Elegant Government Report, and high-end editorial design. The result must be sophisticated, modern, clean, visually impressive, credible, and suitable for professional healthcare communication.
@@ -728,10 +753,12 @@ Create a world-class premium Thai educational and government visual composition.
 Use ONLY the palette defined in COLOR_THEME [01] as the controlling theme. Apply it consistently to backgrounds, typography, lighting, borders, ribbons, decorative details, gradients, icons, illustrations, data graphics, and environmental accents. You may derive lighter, darker, softer, translucent, and complementary tonal variations from the selected palette for legibility and depth. Do not incorporate the names or palettes of any unselected themes. Maintain excellent readability and accessibility. ${metallicLine}
 
 [04] COMPOSITION & VISUAL HIERARCHY
+${typeGuidance.composition}
 Establish a striking primary focal point, elegant headline area, well-balanced secondary information, clean supporting details, generous negative space, disciplined grid alignment, and clear visual hierarchy. Use premium typography with precise Thai character shaping, correct vowels, tone marks, spelling, and line breaks. Do not invent names, dates, numbers, institutions, statistics, medical claims, or logos.
 ${state.backgroundPattern ? `Background treatment: Apply ${state.backgroundPattern} as a subtle decorative background layer, rendered in tonal variations of COLOR_THEME [01] only, kept low-contrast so it never competes with foreground text or subjects.` : "Background treatment: Keep the background flat and clean with no decorative pattern."}
 
 [05] ADAPTIVE VISUAL DIRECTION
+Deliverable-specific direction: ${typeGuidance.visualDirection}
 Select subject-appropriate imagery and illustrations based on CONTENT. ${peopleLine} For infographics and dashboards, prioritize data legibility and clean chart structures. Use sharp typography zones, cinematic lighting, sophisticated depth, and cohesive composition.
 ${state.artStyle ? `Render characters and subjects in the ART_STYLE defined in [01]: "${state.artStyle}". Keep this rendering style consistent across every figure, prop, and illustrated element in the frame.` : "No specific ART_STYLE selected — default to photorealistic, editorial-quality rendering."}
 
@@ -740,6 +767,7 @@ Ultra-realistic, masterpiece, highly detailed, cinematic lighting, professional 
 Style standard: ${STYLE_TAGS.join(" / ")}.
 
 [07] NEGATIVE CONSTRAINTS
+Deliverable-specific constraints: ${typeGuidance.constraints}
 No mismatched color palettes, accidental default blue-gold decoration unless specified in [01], clutter, poor contrast, illegible text, incorrect Thai spelling, distorted anatomy, duplicate people, extra fingers, fake charts, fabricated values, watermark, random lettering, or uncontrolled gradients.
 
 NEGATIVE PROMPT: Distorted Thai characters, misspelled words, hallucinated data, deformed maps, swapped district boundaries, unreadable tables, blurred numbers, disproportionate logos, cluttered layout, messy composition, low resolution, flat design, cartoonish style, bad anatomy, distorted doctor, unreadable text, oversaturated colors, cheap template aesthetics, random English gibberish, watermarks, extra logos, redundant graphic elements, grainy texture, artifacts.
@@ -947,6 +975,7 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     } catch (_) { /* storage unavailable */ }
 
     updateThemeIcon();
+    renderContentTypeOptions();
     loadState();
     restoreFormFromState();
     renderStyleTags();
