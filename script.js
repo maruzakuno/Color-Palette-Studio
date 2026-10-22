@@ -709,7 +709,6 @@
       : `No human figures — focus entirely on typography, iconography, and abstract/environmental elements.`;
 
     return `##MASTER PROMPT — PREMIUM VISUAL DESIGN V3.0##
-Compatible with: ChatGPT (GPT-4o / DALL·E 3 image generation) and Google Gemini (Imagen) — paste this entire prompt directly into the chat to generate the image.
 
 สร้างภาพ
 [01] CORE CONFIGURATION
