@@ -306,6 +306,35 @@
         }),
       ],
     },
+    {
+      label: "ปฏิทินและกำหนดการกิจกรรม",
+      types: [
+        defineType({
+          id: "academic-calendar", value: "Academic Calendar / Events Calendar", label: "ปฏิทินงานวิชาการ/กิจกรรม",
+          textDensity: "high", hierarchy: "month-grid-first", safeArea: "5%",
+          recommendedRatios: ["A4 Portrait", "3:4"],
+          requiredZones: [
+            "emblem, flag, and header banner",
+            "title block (calendar title, semester/term, academic year, organization name)",
+            "motto tagline and small highlight callout",
+            "monthly grid cards, each with a themed illustration and a numbered list of dated activities",
+            "notes/remarks section",
+            "activity goals section",
+            "contact and follow-channel section (website, social handles, QR code)",
+            "footer tagline banner",
+          ],
+          composition: "Design a dense multi-month calendar poster: emblem/flag header with title block and motto at top; a uniform grid of monthly cards (as many as CONTENT specifies) each carrying a month icon, month name, a themed illustrative scene, and a numbered list of dated activities; a notes/remarks panel and an activity-goals panel beneath the grid; a contact/follow-channel panel with website, social handles, and a QR code placeholder; and a closing tagline banner at the very bottom.",
+          visualDirection: "Use a bright, cheerful, audience-friendly illustrated system: a mascot-framed header, vivid color blocks distinguishing each month card, rounded card borders, playful seasonal icons per month, and consistent friendly typography. Pairs well with a Chibi or Flat Illustration / Vector Art ART_STYLE.",
+          constraints: [
+            "Do not fabricate specific dates, activity names, organization name, website, or social handles beyond what CONTENT specifies.",
+            "Keep each month card's activity list legible — do not overcrowd beyond what cleanly fits the card.",
+            "Do not alter the number or order of months supplied in CONTENT.",
+          ],
+          exampleContent: "ปฏิทินงานวิชาการ ภาคเรียนที่ 2 ปีการศึกษา 2569 โรงเรียนสุขใจวิทยา — เดือนพฤศจิกายน 2569 ถึง มิถุนายน 2570",
+          suggestedColorTheme: "รุ้งสดใสหลากสี (สดใส เป็นมิตร)",
+        }),
+      ],
+    },
   ];
 
   const CONTENT_TYPES = Object.freeze(CONTENT_TYPE_GROUPS.flatMap((group) => group.types));
