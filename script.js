@@ -854,6 +854,7 @@ ${state.artStyle ? `Render characters and subjects in the ART_STYLE defined in [
 [06] QUALITY & OUTPUT
 Ultra-realistic, masterpiece, highly detailed, cinematic lighting, professional magazine quality, high-end editorial finishing, production-grade visual presentation. ${ratioGuidance.output}
 Style standard: ${STYLE_TAGS.join(" / ")}.
+Dimensional rendering mandate: Nothing in the frame may read as flat, single-tone, or flat-vector. Every zone — icons, illustrations, lines, borders, and photographic elements — must use realistic, varied color tones with visible dimensional lighting, shadow, and material richness, consistent with a premium photorealistic infographic treatment.
 
 [07] NEGATIVE CONSTRAINTS
 Deliverable-specific constraints: ${typeGuidance.constraints}
