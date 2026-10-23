@@ -17,8 +17,8 @@ const {
   buildContentTypeGuidance = () => ({}),
 } = api;
 
-test("exposes the approved 24 deliverable types in grouped order", () => {
-  assert.equal(CONTENT_TYPES.length, 24);
+test("exposes the approved 25 deliverable types in grouped order", () => {
+  assert.equal(CONTENT_TYPES.length, 25);
   assert.deepEqual(
     CONTENT_TYPE_GROUPS.map((group) => group.label),
     [
@@ -27,9 +27,10 @@ test("exposes the approved 24 deliverable types in grouped order", () => {
       "ความรู้และการสื่อสารสุขภาพ",
       "ข้อมูล สถิติ และการบริหาร",
       "วิชาการและการนำเสนอ",
+      "ประวัติและเอกลักษณ์หน่วยงาน",
     ],
   );
-  assert.equal(new Set(CONTENT_TYPES.map((type) => type.value)).size, 24);
+  assert.equal(new Set(CONTENT_TYPES.map((type) => type.value)).size, 25);
   assert.equal(DEFAULT_CONTENT_TYPE, "Book / Report Cover");
 });
 

@@ -276,6 +276,36 @@
         }),
       ],
     },
+    {
+      label: "ประวัติและเอกลักษณ์หน่วยงาน",
+      types: [
+        defineType({
+          id: "organization-history-infographic", value: "Organization History Infographic", label: "อินโฟกราฟิกประวัติหน่วยงาน/สถานศึกษา",
+          textDensity: "high", hierarchy: "chronological-timeline-first", safeArea: "6%",
+          recommendedRatios: ["A4 Portrait", "3:4"],
+          requiredZones: [
+            "emblem and header banner",
+            "title and subtitle",
+            "general information panel (name, location, affiliation, founding date, area, service/education level)",
+            "founding background narrative with archival photo",
+            "chronological development timeline with milestone photos",
+            "key people profile cards",
+            "past-and-present photo gallery",
+            "current status summary with pull-quote callout",
+            "footer tagline icon strip",
+          ],
+          composition: "Build a dense multi-section vertical infographic in this fixed order: an emblem/crest with header banner at top; a bold title and subtitle block; an icon-led general-information panel listing name, location, affiliation, founding date, area, and service/education level; a narrative history section paired with one archival photo; a horizontal chronological timeline of development milestones, each with a small photo and short caption; a row of key-people profile cards (photo, name, role, period); a past-vs-present photo gallery grid; a current-status summary paired with a pull-quote callout; and a footer strip of tagline icons.",
+          visualDirection: "Use an ornate premium government/education visual system: a circular emblem or crest at the top, gold-bordered panel cards, floral corner ornaments, a cohesive teal/navy-and-gold (or COLOR_THEME-matched) color system, real photographic building and people imagery, and a clear left-to-right chronological flow for the timeline row.",
+          constraints: [
+            "Do not fabricate the organization name, founding date, location, area, headcount, or any named person shown in the people or photo sections unless supplied in CONTENT.",
+            "Do not invent timeline milestone years, captions, or events beyond what CONTENT specifies.",
+            "Keep every panel's text fully inside its own card — no overflow, clipping, or overlap across section borders.",
+          ],
+          exampleContent: "ประวัติโรงพยาบาลส่งเสริมสุขภาพตำบล — จากจุดเริ่มต้นสู่หน่วยบริการปฐมภูมิต้นแบบ จังหวัดนราธิวาส",
+          suggestedColorTheme: "เขียวมรกต-ทอง (ทางการ สถาบัน)",
+        }),
+      ],
+    },
   ];
 
   const CONTENT_TYPES = Object.freeze(CONTENT_TYPE_GROUPS.flatMap((group) => group.types));
