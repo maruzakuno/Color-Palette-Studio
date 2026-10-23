@@ -576,6 +576,31 @@
     saveState();
   }
 
+  const CATEGORY_ICONS = {
+    "Healthcare": "i-heart-pulse",
+    "Government Luxury": "i-column",
+    "Modern Tech": "i-cpu",
+    "Corporate": "i-briefcase",
+    "Neutral": "i-scale",
+    "Vibrant Gradient": "i-burst",
+    "กระตุ้นความสนใจและพลังงาน": "i-bolt",
+    "หรูหราและพรีเมียม": "i-gem",
+    "น่าเชื่อถือและเทคโนโลยี": "i-shield-check",
+    "ธรรมชาติและออร์แกนิก": "i-leaf",
+    "นุ่มนวลและเป็นมิตร": "i-smile",
+    "Material Design": "i-layers",
+    "Flat UI Classic": "i-shapes",
+    "แบรนด์ยอดนิยม": "i-badge-star",
+    "Pantone สีแห่งปี": "i-swatch",
+    "โทนธรรมชาติ & อัญมณี": "i-crystal",
+    "สีมงคลตามความเชื่อไทย": "i-lotus",
+    "อินโฟกราฟิกระดับมาสเตอร์พีซ": "i-bar-chart",
+  };
+
+  function categoryIcon(cat) {
+    return CATEGORY_ICONS[cat] || "i-palette";
+  }
+
   function renderTiles() {
     els.tiles.innerHTML = "";
     categories().forEach((cat) => {
@@ -587,7 +612,7 @@
       tile.setAttribute("aria-pressed", String(state.category === cat));
       tile.innerHTML = `
         <div class="tile-top">
-          <span class="gico"><svg class="i"><use href="#i-palette"/></svg></span>
+          <span class="gico"><svg class="i"><use href="#${categoryIcon(cat)}"/></svg></span>
           <span class="num">${count}<small>พาเลต</small></span>
         </div>
         <h3>${cat}</h3>
