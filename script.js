@@ -7,6 +7,7 @@
     normalizeContentType,
     buildContentTypeGuidance,
     getExampleContent,
+    getSuggestedColorTheme,
   } = globalThis.HealthPromptContentTypes;
 
   const {
@@ -38,6 +39,8 @@
 
   const els = {
     colorTheme: document.getElementById("colorTheme"),
+    colorThemeHint: document.getElementById("colorThemeHint"),
+    useSuggestedThemeBtn: document.getElementById("useSuggestedThemeBtn"),
     content: document.getElementById("contentInput"),
     clearContentBtn: document.getElementById("clearContentBtn"),
     useExampleContentBtn: document.getElementById("useExampleContentBtn"),
@@ -137,6 +140,20 @@
     const compatibility = getAspectRatioCompatibility(state.contentType, state.aspectRatio);
     els.aspectRatioHint.textContent = compatibility.message;
     els.aspectRatioHint.dataset.status = compatibility.isRecommended ? "recommended" : "warning";
+  }
+
+  function renderColorThemeHint() {
+    const suggestion = getSuggestedColorTheme(state.contentType);
+    els.colorThemeHint.textContent = suggestion ? `แนะนำสำหรับ "${state.contentType}": ${suggestion}` : "";
+  }
+
+  function applySuggestedColorTheme() {
+    const suggestion = getSuggestedColorTheme(state.contentType);
+    if (!suggestion) return;
+    state.colorTheme = suggestion;
+    els.colorTheme.value = suggestion;
+    renderPrompt();
+    saveState();
   }
 
   function renderStyleTags() {
@@ -400,6 +417,7 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
       renderPrompt();
       saveState();
     });
+    els.useSuggestedThemeBtn.addEventListener("click", applySuggestedColorTheme);
 
     els.content.addEventListener("input", (e) => {
       state.content = e.target.value;
@@ -458,6 +476,8 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     els.contentType.addEventListener("change", (e) => {
       state.contentType = e.target.value;
       renderAspectRatioHint();
+      renderColorThemeHint();
+      if (!state.colorTheme.trim()) applySuggestedColorTheme();
       renderPreview();
       renderPrompt();
       saveState();
@@ -548,6 +568,8 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     loadState();
     restoreFormFromState();
     renderAspectRatioHint();
+    renderColorThemeHint();
+    if (!state.colorTheme.trim()) applySuggestedColorTheme();
     renderStyleTags();
     renderPreview();
     renderPrompt();
