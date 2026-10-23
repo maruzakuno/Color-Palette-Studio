@@ -86,7 +86,7 @@ test("boots with five groups and 24 selectable deliverable types", () => {
   const select = elements.get("contentType");
 
   assert.equal(select.children.length, 7);
-  assert.equal(select.children.flatMap((group) => group.children).length, 26);
+  assert.equal(select.children.flatMap((group) => group.children).length, 27);
   assert.equal(select.value, "Book / Report Cover");
 });
 
