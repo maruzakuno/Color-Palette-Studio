@@ -923,6 +923,77 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     try { localStorage.setItem(THEME_KEY, next); } catch (_) { /* storage unavailable */ }
   }
 
+  function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(reader.error || new Error("อ่านไฟล์ไม่สำเร็จ"));
+      reader.readAsText(file, "utf-8");
+    });
+  }
+
+  function readFileAsArrayBuffer(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error || new Error("อ่านไฟล์ไม่สำเร็จ"));
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  function extractDocTextHeuristic(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let text = "";
+    for (let i = 0; i < bytes.length - 1; i += 2) {
+      const code = bytes[i] | (bytes[i + 1] << 8);
+      const isAscii = code >= 0x20 && code <= 0x7e;
+      const isThai = code >= 0x0e00 && code <= 0x0e7f;
+      const isBreak = code === 0x0a || code === 0x0d || code === 0x09;
+      if (isAscii || isThai || isBreak) {
+        text += String.fromCharCode(code);
+      } else if (code !== 0x0000) {
+        text += " ";
+      }
+    }
+    return text
+      .replace(/[ \t]{2,}/g, " ")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  }
+
+  async function extractTextFromFile(file) {
+    const name = file.name.toLowerCase();
+
+    if (name.endsWith(".txt") || name.endsWith(".md")) {
+      return { text: await readFileAsText(file) };
+    }
+
+    if (name.endsWith(".docx")) {
+      if (!window.mammoth) throw new Error("ไลบรารีอ่านไฟล์ Word ยังโหลดไม่เสร็จ ลองใหม่อีกครั้ง");
+      const buffer = await readFileAsArrayBuffer(file);
+      const result = await window.mammoth.extractRawText({ arrayBuffer: buffer });
+      return { text: result.value };
+    }
+
+    if (name.endsWith(".doc")) {
+      const buffer = await readFileAsArrayBuffer(file);
+      const text = extractDocTextHeuristic(buffer);
+      return { text, note: "ไฟล์ .doc เก่าดึงข้อความแบบเบื้องต้น อาจมีตัวอักษรแปลกปนมา แนะนำแปลงเป็น .docx เพื่อความแม่นยำ" };
+    }
+
+    if (name.endsWith(".xlsx") || name.endsWith(".xls")) {
+      if (!window.XLSX) throw new Error("ไลบรารีอ่านไฟล์ Excel ยังโหลดไม่เสร็จ ลองใหม่อีกครั้ง");
+      const buffer = await readFileAsArrayBuffer(file);
+      const workbook = window.XLSX.read(buffer, { type: "array" });
+      const text = workbook.SheetNames
+        .map((sheetName) => `# ${sheetName}\n${window.XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName])}`)
+        .join("\n\n");
+      return { text };
+    }
+
+    throw new Error("รองรับเฉพาะไฟล์ .txt, .md, .docx, .doc, .xlsx, .xls");
+  }
+
   function bindEvents() {
     [els.heroSearch, els.navSearch].forEach((input) => {
       input.addEventListener("input", (e) => {
@@ -963,25 +1034,25 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     els.attachFileBtn.addEventListener("click", () => {
       els.attachFileInput.click();
     });
-    els.attachFileInput.addEventListener("change", (e) => {
+    els.attachFileInput.addEventListener("change", async (e) => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = () => {
-        const text = String(reader.result || "").trim();
-        state.content = text;
-        els.content.value = text;
-        els.attachFileStatus.textContent = `แนบไฟล์ "${file.name}" แล้ว (${text.length.toLocaleString("th-TH")} ตัวอักษร) — ไฟล์ถูกอ่านเข้าหน่วยความจำเบราว์เซอร์เท่านั้น ไม่มีการอัปโหลดขึ้นเซิร์ฟเวอร์ และอ้างอิงไฟล์ถูกล้างทิ้งแล้ว`;
+      els.attachFileStatus.textContent = `กำลังอ่านไฟล์ "${file.name}"…`;
+      try {
+        const { text, note } = await extractTextFromFile(file);
+        const cleaned = text.trim();
+        state.content = cleaned;
+        els.content.value = cleaned;
+        const lenLabel = cleaned.length.toLocaleString("th-TH");
+        els.attachFileStatus.textContent = `แนบไฟล์ "${file.name}" แล้ว (${lenLabel} ตัวอักษร)${note ? ` — ${note}` : ""} — ไฟล์ถูกอ่านเข้าหน่วยความจำเบราว์เซอร์เท่านั้น ไม่มีการอัปโหลดขึ้นเซิร์ฟเวอร์ และอ้างอิงไฟล์ถูกล้างทิ้งแล้ว`;
         renderPreview();
         renderPrompt();
         saveState();
+      } catch (err) {
+        els.attachFileStatus.textContent = `อ่านไฟล์ "${file.name}" ไม่สำเร็จ: ${err && err.message ? err.message : "ไม่รองรับไฟล์นี้"}`;
+      } finally {
         e.target.value = "";
-      };
-      reader.onerror = () => {
-        els.attachFileStatus.textContent = `อ่านไฟล์ "${file.name}" ไม่สำเร็จ`;
-        e.target.value = "";
-      };
-      reader.readAsText(file, "utf-8");
+      }
     });
     els.contentType.addEventListener("change", (e) => {
       state.contentType = e.target.value;
