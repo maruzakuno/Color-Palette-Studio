@@ -107,8 +107,10 @@
           <h2 id="configTitle">กำหนดเนื้อหา &amp; รูปแบบ</h2>
 
           <label class="field">
-            <span class="field-label-row">ใส่เนื้อหา CONTENT — หัวข้อ/เนื้อหาหลัก<span class="field-label-actions"><button type="button" class="btn sm ghost" id="useExampleContentBtn">ใช้ตัวอย่าง</button><button type="button" class="btn sm ghost" id="clearContentBtn">ล้างข้อความ</button></span></span>
+            <span class="field-label-row">ใส่เนื้อหา CONTENT — หัวข้อ/เนื้อหาหลัก<span class="field-label-actions"><button type="button" class="btn sm ghost" id="attachFileBtn">แนบไฟล์</button><button type="button" class="btn sm ghost" id="useExampleContentBtn">ใช้ตัวอย่าง</button><button type="button" class="btn sm ghost" id="clearContentBtn">ล้างข้อความ</button></span></span>
+            <input type="file" id="attachFileInput" accept=".txt,.md,text/plain,text/markdown" hidden />
             <textarea id="contentInput" rows="2" placeholder="เช่น ปกรายงานประจำปี งานสาธารณสุขปฐมภูมิ จังหวัดนราธิวาส"></textarea>
+            <small id="attachFileStatus" class="field-hint" role="status" aria-live="polite"></small>
           </label>
 
           <label class="field">

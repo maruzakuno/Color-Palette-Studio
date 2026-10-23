@@ -490,6 +490,9 @@
     content: document.getElementById("contentInput"),
     clearContentBtn: document.getElementById("clearContentBtn"),
     useExampleContentBtn: document.getElementById("useExampleContentBtn"),
+    attachFileBtn: document.getElementById("attachFileBtn"),
+    attachFileInput: document.getElementById("attachFileInput"),
+    attachFileStatus: document.getElementById("attachFileStatus"),
     department: document.getElementById("department"),
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
@@ -956,6 +959,29 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
       renderPreview();
       renderPrompt();
       saveState();
+    });
+    els.attachFileBtn.addEventListener("click", () => {
+      els.attachFileInput.click();
+    });
+    els.attachFileInput.addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = String(reader.result || "").trim();
+        state.content = text;
+        els.content.value = text;
+        els.attachFileStatus.textContent = `แนบไฟล์ "${file.name}" แล้ว (${text.length.toLocaleString("th-TH")} ตัวอักษร) — ไฟล์ถูกอ่านเข้าหน่วยความจำเบราว์เซอร์เท่านั้น ไม่มีการอัปโหลดขึ้นเซิร์ฟเวอร์ และอ้างอิงไฟล์ถูกล้างทิ้งแล้ว`;
+        renderPreview();
+        renderPrompt();
+        saveState();
+        e.target.value = "";
+      };
+      reader.onerror = () => {
+        els.attachFileStatus.textContent = `อ่านไฟล์ "${file.name}" ไม่สำเร็จ`;
+        e.target.value = "";
+      };
+      reader.readAsText(file, "utf-8");
     });
     els.contentType.addEventListener("change", (e) => {
       state.contentType = e.target.value;
