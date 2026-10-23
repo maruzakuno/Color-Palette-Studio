@@ -71,9 +71,11 @@ function bootApp() {
 
   const profiles = readFileSync(new URL("../content-types.js", import.meta.url), "utf8");
   const aspectRatios = readFileSync(new URL("../aspect-ratios.js", import.meta.url), "utf8");
+  const islamicArtStyles = readFileSync(new URL("../islamic-art-styles.js", import.meta.url), "utf8");
   const app = readFileSync(new URL("../script.js", import.meta.url), "utf8");
   vm.runInContext(profiles, context, { filename: "content-types.js" });
   vm.runInContext(aspectRatios, context, { filename: "aspect-ratios.js" });
+  vm.runInContext(islamicArtStyles, context, { filename: "islamic-art-styles.js" });
   vm.runInContext(app, context, { filename: "script.js" });
   documentListeners.DOMContentLoaded();
   return { elements };
@@ -123,4 +125,37 @@ test("shows compatibility warnings and regenerates complete ratio guidance", () 
   assert.match(elements.get("promptOutput").value, /CANVAS_SIZE = "1080 × 1920 px"/);
   assert.match(elements.get("promptOutput").value, /CROP_STRATEGY/);
   assert.match(elements.get("promptOutput").value, /EXPORT_PROFILE/);
+});
+
+test("adds nine Islamic styles and applies Narathiwat-specific cultural guidance", () => {
+  const { elements } = bootApp();
+  const artStyle = elements.get("artStyle");
+  const islamicGroup = artStyle.children.at(-1);
+
+  assert.equal(islamicGroup.label, "8. กลุ่มอิสลามและมลายูมุสลิม (Islamic & Malay-Muslim)");
+  assert.equal(islamicGroup.children.length, 9);
+  assert.equal(islamicGroup.children[1].value, "Malay-Muslim Narathiwat Heritage");
+
+  artStyle.value = "Malay-Muslim Narathiwat Heritage";
+  artStyle.listeners.change({ target: artStyle });
+
+  const prompt = elements.get("promptOutput").value;
+  assert.match(prompt, /Thai Malay-Muslim communities of Narathiwat/);
+  assert.match(prompt, /Southern Thailand/);
+  assert.match(prompt, /hijab or tudung/i);
+  assert.match(prompt, /pseudo-Arabic\/Jawi gibberish/i);
+});
+
+test("non-figurative Islamic style overrides the people checkbox", () => {
+  const { elements } = bootApp();
+  const artStyle = elements.get("artStyle");
+  const includePeople = elements.get("includePeople");
+
+  includePeople.checked = true;
+  artStyle.value = "Non-Figurative Islamic Sacred-Safe";
+  artStyle.listeners.change({ target: artStyle });
+
+  const prompt = elements.get("promptOutput").value;
+  assert.match(prompt, /No human or animal figures/);
+  assert.doesNotMatch(prompt, /Include authentic Thai healthcare professionals/);
 });

@@ -16,6 +16,11 @@
     buildAspectRatioGuidance,
   } = globalThis.HealthPromptAspectRatios;
 
+  const {
+    ISLAMIC_ART_STYLE_GROUP,
+    buildIslamicArtStyleGuidance,
+  } = globalThis.HealthPromptIslamicArtStyles;
+
   const PALETTES = [
     { id: "medical-blue", name: "Medical Blue", category: "Healthcare",
       colors: { primary: "#1d4ed8", secondary: "#1e3a8a", tertiary: "#60a5fa", metallic: "#93c5fd", bg: "#f5f8ff" } },
@@ -700,6 +705,18 @@
     });
   }
 
+  function renderIslamicArtStyleOptions() {
+    const optgroup = document.createElement("optgroup");
+    optgroup.label = ISLAMIC_ART_STYLE_GROUP.label;
+    ISLAMIC_ART_STYLE_GROUP.styles.forEach((style) => {
+      const option = document.createElement("option");
+      option.value = style.value;
+      option.textContent = style.label;
+      optgroup.appendChild(option);
+    });
+    els.artStyle.appendChild(optgroup);
+  }
+
   function renderAspectRatioHint() {
     const compatibility = getAspectRatioCompatibility(state.contentType, state.aspectRatio);
     els.aspectRatioHint.textContent = compatibility.message;
@@ -757,12 +774,18 @@
     const c = p.colors;
     const typeGuidance = buildContentTypeGuidance(state.contentType);
     const ratioGuidance = buildAspectRatioGuidance(state.aspectRatio);
+    const islamicStyleGuidance = buildIslamicArtStyleGuidance(state.artStyle, state.includePeople) || {
+      configuration: "",
+      peopleDirection: state.includePeople
+        ? "Include authentic Thai healthcare professionals or public-service staff: natural poses, anatomically correct hands, realistic skin texture, inclusive human-centered composition."
+        : "No human figures — focus entirely on typography, iconography, and abstract/environmental elements.",
+      visualDirection: "",
+      constraints: "",
+    };
     const metallicLine = state.includeMetallic
       ? `Metallic Gold/Silver accents may be used if present in the palette (${c.metallic}), applied to borders, ribbons, and decorative details only.`
       : `No metallic effects — keep all surfaces matte and flat within the palette tones.`;
-    const peopleLine = state.includePeople
-      ? `Include authentic Thai healthcare professionals or public-service staff: natural poses, anatomically correct hands, realistic skin texture, inclusive human-centered composition.`
-      : `No human figures — focus entirely on typography, iconography, and abstract/environmental elements.`;
+    const peopleLine = islamicStyleGuidance.peopleDirection;
 
     return `##MASTER PROMPT — PREMIUM VISUAL DESIGN V3.0##
 
@@ -777,6 +800,7 @@ BACKGROUND_PATTERN = "${state.backgroundPattern || "None — flat background"}"
 DEPARTMENT = "${state.department || "ไม่ระบุกลุ่มงาน"}"
 ACCENT_TONE = "${state.toneIndex !== null ? `${toneColorsOf(p)[state.toneIndex]} (${TONE_ROLE_LABELS[TONE_ROLES[state.toneIndex]]} tone of this palette)` : "Not set — use palette colors as-is"}"
 ART_STYLE = "${state.artStyle || "Not set — default to photorealistic editorial rendering"}"
+${islamicStyleGuidance.configuration}
 ${typeGuidance.configuration}
 
 [02] DESIGN CONCEPT
@@ -792,6 +816,7 @@ ${state.backgroundPattern ? `Background treatment: Apply ${state.backgroundPatte
 
 [05] ADAPTIVE VISUAL DIRECTION
 Deliverable-specific direction: ${typeGuidance.visualDirection}
+${islamicStyleGuidance.visualDirection}
 Select subject-appropriate imagery and illustrations based on CONTENT. ${peopleLine} For infographics and dashboards, prioritize data legibility and clean chart structures. Use sharp typography zones, cinematic lighting, sophisticated depth, and cohesive composition.
 ${state.artStyle ? `Render characters and subjects in the ART_STYLE defined in [01]: "${state.artStyle}". Keep this rendering style consistent across every figure, prop, and illustrated element in the frame.` : "No specific ART_STYLE selected — default to photorealistic, editorial-quality rendering."}
 
@@ -801,6 +826,7 @@ Style standard: ${STYLE_TAGS.join(" / ")}.
 
 [07] NEGATIVE CONSTRAINTS
 Deliverable-specific constraints: ${typeGuidance.constraints}
+${islamicStyleGuidance.constraints}
 No mismatched color palettes, accidental default blue-gold decoration unless specified in [01], clutter, poor contrast, illegible text, incorrect Thai spelling, distorted anatomy, duplicate people, extra fingers, fake charts, fabricated values, watermark, random lettering, or uncontrolled gradients.
 
 NEGATIVE PROMPT: Distorted Thai characters, misspelled words, hallucinated data, deformed maps, swapped district boundaries, unreadable tables, blurred numbers, disproportionate logos, cluttered layout, messy composition, low resolution, flat design, cartoonish style, bad anatomy, distorted doctor, unreadable text, oversaturated colors, cheap template aesthetics, random English gibberish, watermarks, extra logos, redundant graphic elements, grainy texture, artifacts.
@@ -1012,6 +1038,7 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     updateThemeIcon();
     renderContentTypeOptions();
     renderAspectRatioOptions();
+    renderIslamicArtStyleOptions();
     loadState();
     restoreFormFromState();
     renderAspectRatioHint();
