@@ -70,8 +70,10 @@ function bootApp() {
   context.window.scrollY = 0;
 
   const profiles = readFileSync(new URL("../content-types.js", import.meta.url), "utf8");
+  const aspectRatios = readFileSync(new URL("../aspect-ratios.js", import.meta.url), "utf8");
   const app = readFileSync(new URL("../script.js", import.meta.url), "utf8");
   vm.runInContext(profiles, context, { filename: "content-types.js" });
+  vm.runInContext(aspectRatios, context, { filename: "aspect-ratios.js" });
   vm.runInContext(app, context, { filename: "script.js" });
   documentListeners.DOMContentLoaded();
   return { elements };
@@ -95,4 +97,30 @@ test("changing deliverable type regenerates type-specific preview and prompt gui
   assert.equal(elements.get("previewType").textContent, "EMERGENCY ALERT / DISEASE ADVISORY");
   assert.match(elements.get("promptOutput").value, /understandable within three seconds/i);
   assert.match(elements.get("promptOutput").value, /Do not fabricate medical instructions/i);
+});
+
+test("boots with 20 grouped ratios and preserves the default ratio", () => {
+  const { elements } = bootApp();
+  const select = elements.get("aspectRatio");
+
+  assert.equal(select.children.length, 5);
+  assert.equal(select.children.flatMap((group) => group.children).length, 20);
+  assert.equal(select.value, "3:4 (Portrait Cover)");
+});
+
+test("shows compatibility warnings and regenerates complete ratio guidance", () => {
+  const { elements } = bootApp();
+  const contentType = elements.get("contentType");
+  const aspectRatio = elements.get("aspectRatio");
+
+  contentType.value = "Research Poster";
+  contentType.listeners.change({ target: contentType });
+  aspectRatio.value = "9:16 (Story / Reel)";
+  aspectRatio.listeners.change({ target: aspectRatio });
+
+  assert.equal(elements.get("aspectRatioHint").dataset.status, "warning");
+  assert.match(elements.get("aspectRatioHint").textContent, /A0 Portrait/);
+  assert.match(elements.get("promptOutput").value, /CANVAS_SIZE = "1080 × 1920 px"/);
+  assert.match(elements.get("promptOutput").value, /CROP_STRATEGY/);
+  assert.match(elements.get("promptOutput").value, /EXPORT_PROFILE/);
 });

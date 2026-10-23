@@ -141,13 +141,8 @@
 
             <label class="field">
               <span>ASPECT_RATIO — อัตราส่วนภาพ</span>
-              <select id="aspectRatio">
-                <option value="3:4 (Portrait Cover)">3:4 — ปกแนวตั้ง</option>
-                <option value="1:1 (Square)">1:1 — สี่เหลี่ยมจัตุรัส</option>
-                <option value="16:9 (Widescreen)">16:9 — จอกว้าง</option>
-                <option value="9:16 (Vertical Social)">9:16 — แนวตั้งโซเชียล</option>
-                <option value="A4 Portrait (210:297)">A4 — แนวตั้งเอกสาร</option>
-              </select>
+              <select id="aspectRatio" aria-describedby="aspectRatioHint"></select>
+              <small id="aspectRatioHint" class="field-hint" role="status" aria-live="polite"></small>
             </label>
           </div>
 
@@ -301,6 +296,7 @@
   </footer>
 
   <script src="content-types.js"></script>
+  <script src="aspect-ratios.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
