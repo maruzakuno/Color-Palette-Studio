@@ -86,6 +86,23 @@
           <h2 id="configTitle">กำหนดเนื้อหา &amp; รูปแบบ</h2>
 
           <label class="field">
+            <span>COLOR_PALETTE_STYLE — สไตล์พาเลตสี</span>
+            <select id="colorPaletteStyle">
+              <option value="">ไม่ระบุ — ให้ AI เลือกเอง</option>
+              <option value="Minimal Neutral (white, grey, black): clean, modern, premium — suited to dashboards, SaaS, portfolios">🤍 Minimal Neutral — ขาว-เทา-ดำ (สะอาดตา พรีเมียม)</option>
+              <option value="Blue Tech (blue tones): trustworthy, professional — suited to FinTech, cloud platforms, back-office systems">🔵 Blue Tech — โทนน้ำเงิน (น่าเชื่อถือ มืออาชีพ)</option>
+              <option value="Purple AI (purple / gradient tones): futuristic, innovative — suited to AI platforms and startups">🟣 Purple AI — โทนม่วง/ไล่สี (ล้ำยุค นวัตกรรม)</option>
+              <option value="Green Nature (green tones): fresh, natural, healthy — suited to health, agriculture, environmental subjects">🟢 Green Nature — โทนเขียว (สดชื่น เป็นธรรมชาติ)</option>
+              <option value="Orange Energy (orange tones): energetic, enthusiastic, friendly — suited to food delivery, sports, events">🟠 Orange Energy — โทนส้ม (มีพลัง เป็นมิตร)</option>
+              <option value="Luxury Dark (black, gold, silver): luxurious, powerful, exclusive — suited to premium brands, finance, investment">⚫ Luxury Dark — ดำ-ทอง-เงิน (หรูหรา เอ็กซ์คลูซีฟ)</option>
+              <option value="Pastel Soft (soft pastel tones): gentle, cute, friendly — suited to parenting/children, education, lifestyle">🌸 Pastel Soft — พาสเทลอ่อน (นุ่มนวล น่ารัก)</option>
+              <option value="Vibrant Gradient (vivid gradient colors): dynamic, bold, eye-catching — suited to creative, music, landing pages">🌈 Vibrant Gradient — สดไล่เฉด (โดดเด่น ดึงดูดสายตา)</option>
+              <option value="Monochrome (one hue across multiple shades): organized, clean, orderly — suited to admin panels, corporate">🎯 Monochrome — สีเดียวไล่น้ำหนัก (เป็นระเบียบ คลีน)</option>
+              <option value="Brand Identity Theme (derived from the organization's own brand colors): builds a distinctive, memorable identity, applicable to any organization">⭐ Brand Identity — อิงสีองค์กร (สร้างภาพจำเฉพาะ)</option>
+            </select>
+          </label>
+
+          <label class="field">
             <span class="field-label-row">ใส่เนื้อหา CONTENT — หัวข้อ/เนื้อหาหลัก<span class="field-label-actions"><button type="button" class="btn sm ghost" id="attachFileBtn">แนบไฟล์</button><button type="button" class="btn sm ghost" id="useExampleContentBtn">ใช้ตัวอย่าง</button><button type="button" class="btn sm ghost" id="clearContentBtn">ล้างข้อความ</button></span></span>
             <input type="file" id="attachFileInput" accept=".txt,.md,.xlsx,.xls,.docx,.doc,text/plain,text/markdown" hidden />
             <textarea id="contentInput" rows="2" placeholder="เช่น ปกรายงานประจำปี งานสาธารณสุขปฐมภูมิ จังหวัดนราธิวาส"></textarea>

@@ -37,6 +37,7 @@
   const THEME_KEY = "healthPromptStudio.theme";
 
   const els = {
+    colorPaletteStyle: document.getElementById("colorPaletteStyle"),
     content: document.getElementById("contentInput"),
     clearContentBtn: document.getElementById("clearContentBtn"),
     useExampleContentBtn: document.getElementById("useExampleContentBtn"),
@@ -66,6 +67,7 @@
   };
 
   let state = {
+    colorPaletteStyle: els.colorPaletteStyle.value,
     content: "",
     contentType: DEFAULT_CONTENT_TYPE,
     aspectRatio: DEFAULT_ASPECT_RATIO,
@@ -169,6 +171,7 @@
 
 สร้างภาพ
 [01] CORE CONFIGURATION
+COLOR_PALETTE_STYLE = "${state.colorPaletteStyle || "Not set — choose a cohesive style appropriate to CONTENT"}"
 CONTENT = "${state.content.trim()}"
 CONTENT_TYPE = "${state.contentType}"
 ASPECT_RATIO = "${state.aspectRatio}"
@@ -183,7 +186,8 @@ ${typeGuidance.configuration}
 Create a world-class premium Thai educational and government visual composition. Combine Premium Thai Educational Report, Luxury Academic Cover, Elegant Government Report, and high-end editorial design. The result must be sophisticated, modern, clean, visually impressive, credible, and suitable for professional healthcare communication.
 
 [03] GLOBAL COLOR SYSTEM
-Choose a single cohesive color scheme appropriate to CONTENT and CONTENT_TYPE, and apply it consistently to backgrounds, typography, lighting, borders, ribbons, decorative details, gradients, icons, illustrations, data graphics, and environmental accents. Derive lighter, darker, softer, translucent, and complementary tonal variations from that scheme for legibility and depth. Do not mix in unrelated or clashing color themes. Maintain excellent readability and accessibility. ${metallicLine}
+${state.colorPaletteStyle ? `Follow the COLOR_PALETTE_STYLE defined in [01]: ${state.colorPaletteStyle}.` : "Choose a single cohesive color scheme appropriate to CONTENT and CONTENT_TYPE."} Apply it consistently to backgrounds, typography, lighting, borders, ribbons, decorative details, gradients, icons, illustrations, data graphics, and environmental accents. Derive lighter, darker, softer, translucent, and complementary tonal variations from that scheme for legibility and depth. Do not mix in unrelated or clashing color themes. Maintain excellent readability and accessibility. ${metallicLine}
+Color system best practices: use exactly one primary color for brand identity; define a clear accent/secondary color reserved for CTAs, highlights, or alerts; keep the total combined palette to 3–5 colors; ensure strong background-to-text contrast for accessibility; keep usage consistent as a reusable design system.
 
 [04] COMPOSITION & VISUAL HIERARCHY
 ${typeGuidance.composition}
@@ -391,6 +395,12 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
   }
 
   function bindEvents() {
+    els.colorPaletteStyle.addEventListener("change", (e) => {
+      state.colorPaletteStyle = e.target.value;
+      renderPrompt();
+      saveState();
+    });
+
     els.content.addEventListener("input", (e) => {
       state.content = e.target.value;
       renderPreview();
@@ -514,6 +524,7 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
   }
 
   function restoreFormFromState() {
+    els.colorPaletteStyle.value = state.colorPaletteStyle || "";
     els.content.value = state.content || "";
     els.contentType.value = state.contentType;
     els.aspectRatio.value = state.aspectRatio;
