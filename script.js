@@ -498,7 +498,6 @@
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
     aspectRatioHint: document.getElementById("aspectRatioHint"),
-    backgroundPattern: document.getElementById("backgroundPattern"),
     artStyle: document.getElementById("artStyle"),
     includePeople: document.getElementById("includePeople"),
     includeMetallic: document.getElementById("includeMetallic"),
@@ -525,7 +524,6 @@
     content: "",
     contentType: DEFAULT_CONTENT_TYPE,
     aspectRatio: DEFAULT_ASPECT_RATIO,
-    backgroundPattern: els.backgroundPattern.value,
     artStyle: els.artStyle.value,
     department: "",
     toneIndex: null,
@@ -827,7 +825,6 @@ CONTENT = "${state.content.trim()}"
 CONTENT_TYPE = "${state.contentType}"
 ASPECT_RATIO = "${state.aspectRatio}"
 ${ratioGuidance.configuration}
-BACKGROUND_PATTERN = "${state.backgroundPattern || "None — flat background"}"
 DEPARTMENT = "${state.department || "ไม่ระบุกลุ่มงาน"}"
 ACCENT_TONE = "${state.toneIndex !== null ? `${toneColorsOf(p)[state.toneIndex]} (${TONE_ROLE_LABELS[TONE_ROLES[state.toneIndex]]} tone of this palette)` : "Not set — use palette colors as-is"}"
 ART_STYLE = "${state.artStyle || "Not set — default to photorealistic editorial rendering"}"
@@ -843,7 +840,6 @@ Use ONLY the palette defined in COLOR_THEME [01] as the controlling theme. Apply
 [04] COMPOSITION & VISUAL HIERARCHY
 ${typeGuidance.composition}
 Establish a striking primary focal point, elegant headline area, well-balanced secondary information, clean supporting details, generous negative space, disciplined grid alignment, and clear visual hierarchy. Use premium typography with precise Thai character shaping, correct vowels, tone marks, spelling, and line breaks. Do not invent names, dates, numbers, institutions, statistics, medical claims, or logos.
-${state.backgroundPattern ? `Background treatment: Apply ${state.backgroundPattern} as a subtle decorative background layer, rendered in tonal variations of COLOR_THEME [01] only, kept low-contrast so it never competes with foreground text or subjects.` : "Background treatment: Keep the background flat and clean with no decorative pattern."}
 
 [05] ADAPTIVE VISUAL DIRECTION
 Deliverable-specific direction: ${typeGuidance.visualDirection}
@@ -1134,11 +1130,6 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
       renderPrompt();
       saveState();
     });
-    els.backgroundPattern.addEventListener("change", (e) => {
-      state.backgroundPattern = e.target.value;
-      renderPrompt();
-      saveState();
-    });
     els.artStyle.addEventListener("change", (e) => {
       state.artStyle = e.target.value;
       renderPrompt();
@@ -1194,7 +1185,6 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     els.content.value = state.content || "";
     els.contentType.value = state.contentType;
     els.aspectRatio.value = state.aspectRatio;
-    els.backgroundPattern.value = state.backgroundPattern || "";
     els.artStyle.value = state.artStyle || "";
     els.department.value = state.department || "";
     els.includePeople.checked = state.includePeople;
