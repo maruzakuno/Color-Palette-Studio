@@ -7,7 +7,6 @@
     normalizeContentType,
     buildContentTypeGuidance,
     getExampleContent,
-    getSuggestedColorTheme,
   } = globalThis.HealthPromptContentTypes;
 
   const {
@@ -38,9 +37,6 @@
   const THEME_KEY = "healthPromptStudio.theme";
 
   const els = {
-    colorTheme: document.getElementById("colorTheme"),
-    colorThemeHint: document.getElementById("colorThemeHint"),
-    useSuggestedThemeBtn: document.getElementById("useSuggestedThemeBtn"),
     content: document.getElementById("contentInput"),
     clearContentBtn: document.getElementById("clearContentBtn"),
     useExampleContentBtn: document.getElementById("useExampleContentBtn"),
@@ -70,7 +66,6 @@
   };
 
   let state = {
-    colorTheme: "",
     content: "",
     contentType: DEFAULT_CONTENT_TYPE,
     aspectRatio: DEFAULT_ASPECT_RATIO,
@@ -142,20 +137,6 @@
     els.aspectRatioHint.dataset.status = compatibility.isRecommended ? "recommended" : "warning";
   }
 
-  function renderColorThemeHint() {
-    const suggestion = getSuggestedColorTheme(state.contentType);
-    els.colorThemeHint.textContent = suggestion ? `แนะนำสำหรับ "${state.contentType}": ${suggestion}` : "";
-  }
-
-  function applySuggestedColorTheme() {
-    const suggestion = getSuggestedColorTheme(state.contentType);
-    if (!suggestion) return;
-    state.colorTheme = suggestion;
-    els.colorTheme.value = suggestion;
-    renderPrompt();
-    saveState();
-  }
-
   function renderStyleTags() {
     els.styleTags.innerHTML = STYLE_TAGS
       .map((t) => `<span class="tag">${t}</span>`)
@@ -169,7 +150,6 @@
   }
 
   function buildPrompt() {
-    const colorTheme = state.colorTheme.trim() || "Not set — choose a sophisticated theme appropriate to CONTENT";
     const typeGuidance = buildContentTypeGuidance(state.contentType);
     const ratioGuidance = buildAspectRatioGuidance(state.aspectRatio);
     const islamicStyleGuidance = buildIslamicArtStyleGuidance(state.artStyle, state.includePeople) || {
@@ -181,15 +161,14 @@
       constraints: "",
     };
     const metallicLine = state.includeMetallic
-      ? `Metallic Gold/Silver accents may be used where appropriate to COLOR_THEME, applied to borders, ribbons, and decorative details only.`
-      : `No metallic effects — keep all surfaces matte and flat within the COLOR_THEME tones.`;
+      ? `Metallic Gold/Silver accents may be used where appropriate, applied to borders, ribbons, and decorative details only.`
+      : `No metallic effects — keep all surfaces matte and flat.`;
     const peopleLine = islamicStyleGuidance.peopleDirection;
 
     return `##MASTER PROMPT — PREMIUM VISUAL DESIGN V3.0##
 
 สร้างภาพ
 [01] CORE CONFIGURATION
-COLOR_THEME = "${colorTheme}"
 CONTENT = "${state.content.trim()}"
 CONTENT_TYPE = "${state.contentType}"
 ASPECT_RATIO = "${state.aspectRatio}"
@@ -204,12 +183,12 @@ ${typeGuidance.configuration}
 Create a world-class premium Thai educational and government visual composition. Combine Premium Thai Educational Report, Luxury Academic Cover, Elegant Government Report, and high-end editorial design. The result must be sophisticated, modern, clean, visually impressive, credible, and suitable for professional healthcare communication.
 
 [03] GLOBAL COLOR SYSTEM
-Use ONLY the palette defined in COLOR_THEME [01] as the controlling theme. Apply it consistently to backgrounds, typography, lighting, borders, ribbons, decorative details, gradients, icons, illustrations, data graphics, and environmental accents. You may derive lighter, darker, softer, translucent, and complementary tonal variations from the selected palette for legibility and depth. Do not incorporate the names or palettes of any unselected themes. Maintain excellent readability and accessibility. ${metallicLine}
+Choose a single cohesive color scheme appropriate to CONTENT and CONTENT_TYPE, and apply it consistently to backgrounds, typography, lighting, borders, ribbons, decorative details, gradients, icons, illustrations, data graphics, and environmental accents. Derive lighter, darker, softer, translucent, and complementary tonal variations from that scheme for legibility and depth. Do not mix in unrelated or clashing color themes. Maintain excellent readability and accessibility. ${metallicLine}
 
 [04] COMPOSITION & VISUAL HIERARCHY
 ${typeGuidance.composition}
 Establish a striking primary focal point, elegant headline area, well-balanced secondary information, clean supporting details, generous negative space, disciplined grid alignment, and clear visual hierarchy. Use premium typography with precise Thai character shaping, correct vowels, tone marks, spelling, and line breaks. Do not invent names, dates, numbers, institutions, statistics, medical claims, or logos.
-${state.backgroundPattern ? `Background treatment: Apply ${state.backgroundPattern} as a subtle decorative background layer, rendered in tonal variations of COLOR_THEME [01] only, kept low-contrast so it never competes with foreground text or subjects.` : "Background treatment: Keep the background flat and clean with no decorative pattern."}
+${state.backgroundPattern ? `Background treatment: Apply ${state.backgroundPattern} as a subtle decorative background layer, rendered in tonal variations of the chosen color scheme only, kept low-contrast so it never competes with foreground text or subjects.` : "Background treatment: Keep the background flat and clean with no decorative pattern."}
 
 [05] ADAPTIVE VISUAL DIRECTION
 Deliverable-specific direction: ${typeGuidance.visualDirection}
@@ -245,7 +224,7 @@ NEGATIVE PROMPT: Distorted Thai characters, misspelled words, hallucinated data,
 13. Final Quality Verification: Carefully inspect every word, character, vowel, tone mark, number, punctuation mark, and image detail before final output. Correct any detected error without modifying the intended original content.
 14. Zero-Tolerance Quality Standard: The final output must contain no detectable spelling errors, malformed Thai characters, missing text, blurred typography, image distortion, or unauthorized content modifications.
 
-FINAL RULE: All visual color decisions must derive from the single COLOR_THEME configuration in [01]. Never override it elsewhere in the prompt.
+FINAL RULE: All visual color decisions must stay consistent with the single color scheme established in [03]. Never introduce a clashing or unrelated color theme elsewhere in the prompt.
 
 CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
   }
@@ -412,13 +391,6 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
   }
 
   function bindEvents() {
-    els.colorTheme.addEventListener("input", (e) => {
-      state.colorTheme = e.target.value;
-      renderPrompt();
-      saveState();
-    });
-    els.useSuggestedThemeBtn.addEventListener("click", applySuggestedColorTheme);
-
     els.content.addEventListener("input", (e) => {
       state.content = e.target.value;
       renderPreview();
@@ -476,8 +448,6 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     els.contentType.addEventListener("change", (e) => {
       state.contentType = e.target.value;
       renderAspectRatioHint();
-      renderColorThemeHint();
-      if (!state.colorTheme.trim()) applySuggestedColorTheme();
       renderPreview();
       renderPrompt();
       saveState();
@@ -544,7 +514,6 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
   }
 
   function restoreFormFromState() {
-    els.colorTheme.value = state.colorTheme || "";
     els.content.value = state.content || "";
     els.contentType.value = state.contentType;
     els.aspectRatio.value = state.aspectRatio;
@@ -568,8 +537,6 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     loadState();
     restoreFormFromState();
     renderAspectRatioHint();
-    renderColorThemeHint();
-    if (!state.colorTheme.trim()) applySuggestedColorTheme();
     renderStyleTags();
     renderPreview();
     renderPrompt();

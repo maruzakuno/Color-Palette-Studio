@@ -86,12 +86,6 @@
           <h2 id="configTitle">กำหนดเนื้อหา &amp; รูปแบบ</h2>
 
           <label class="field">
-            <span class="field-label-row">COLOR_THEME — ธีมสี/โทนสี<span class="field-label-actions"><button type="button" class="btn sm ghost" id="useSuggestedThemeBtn">เลือกตามเนื้อหาที่แสดง</button></span></span>
-            <input type="text" id="colorTheme" placeholder="เช่น เขียวมรกต-ทอง, น้ำเงินกรมท่า-ขาว, ฟ้าพาสเทล-ครีม" />
-            <small id="colorThemeHint" class="field-hint"></small>
-          </label>
-
-          <label class="field">
             <span class="field-label-row">ใส่เนื้อหา CONTENT — หัวข้อ/เนื้อหาหลัก<span class="field-label-actions"><button type="button" class="btn sm ghost" id="attachFileBtn">แนบไฟล์</button><button type="button" class="btn sm ghost" id="useExampleContentBtn">ใช้ตัวอย่าง</button><button type="button" class="btn sm ghost" id="clearContentBtn">ล้างข้อความ</button></span></span>
             <input type="file" id="attachFileInput" accept=".txt,.md,.xlsx,.xls,.docx,.doc,text/plain,text/markdown" hidden />
             <textarea id="contentInput" rows="2" placeholder="เช่น ปกรายงานประจำปี งานสาธารณสุขปฐมภูมิ จังหวัดนราธิวาส"></textarea>
@@ -148,7 +142,7 @@
               <option value="Flowing, rippling fabric layered with metallic gold ribbons creating a luxury 3D dimension, elegant champagne-gold curved lines gracefully wrapping around the composition, with soft glow, golden sparkle, and small light flares added in balanced, uncluttered amounts">ผ้าพลิ้วไหว + ริบบิ้นทองเมทัลลิก 3D หรูหรา</option>
               <option value="Lower section uses silk fabric with flowing multi-layered waves and glossy gold edges, blended with gold Thai pattern motifs and faint Thai pattern details on a deep green background, conveying an elegant, premium official government document feel">ผ้าไหมเขียวเข้ม + ขอบทอง + ลายไทยทอง (เอกสารราชการพรีเมียม)</option>
               <option value="Background gradient flowing from a light cream-gold tone at the top down to navy blue blended with gold at the bottom, with curved metallic gold ribbon lines and softly flowing translucent white layers, soft glow and fine golden sparkle light, giving the image a premium luxurious academic-document feel">ไล่เฉดครีมทอง → น้ำเงินกรมท่าทอง + ริบบิ้นทอง (เอกสารวิชาการหรูหรา)</option>
-              <option value="Background gradient fading into a deeper tone of COLOR_THEME at the bottom, with curved metallic gold ribbon lines and softly flowing translucent white silk-like layers, soft glow and fine golden sparkle light, giving the image a luxurious, dimensional look">ไล่เฉดสีธีมด้านล่าง + ริบบิ้นทอง + ผ้าไหมโปร่งแสง (หรูหรามีมิติ)</option>
+              <option value="Background gradient fading into a deeper tone of the chosen color scheme at the bottom, with curved metallic gold ribbon lines and softly flowing translucent white silk-like layers, soft glow and fine golden sparkle light, giving the image a luxurious, dimensional look">ไล่เฉดสีธีมด้านล่าง + ริบบิ้นทอง + ผ้าไหมโปร่งแสง (หรูหรามีมิติ)</option>
               <option value="Uses the palette's tone colors blended with metallic gold — a softly flowing pink gradient background with flowing ribbons, curved gold lines, sparkling shimmering light, and thin translucent patterns, giving a luxurious, dimensional, and easy-on-the-eyes feel">ไล่เฉดชมพูนุ่มนวล + ริบบิ้นทอง + ประกายระยิบระยับ (หรูหรา สบายตา)</option>
               <option value="Uses the palette's tone colors blended with metallic gold — a softly blended gradient background decorated with flowing ribbons, curved gold lines, sparkling shimmering light, and seafoam-green and white flowers, composed harmoniously and beautifully without visual clutter">ไล่เฉดนุ่มนวล + ริบบิ้นทอง + ดอกไม้เขียวน้ำทะเล-ขาว (กลมกลืน สวยงาม)</option>
               <option value="Royal sky-blue background with soft realistic clouds and warm sunlight glow, every content card and section framed with ornate carved baroque-gold borders and corner flourishes, an elegant royal-blue ribbon banner for the header, dimensional gold sparkle and light rays throughout, rich layered depth with photorealistic supporting imagery — every zone of the composition must carry visible dimensional lighting, shadow, and material richness; nothing in the frame may read as flat or single-tone">อินโฟกราฟิกทอง-น้ำเงินหรูหรา กรอบทองแกะสลัก + ท้องฟ้าจริง (Royal Blue-Gold Infographic)</option>
@@ -225,7 +219,7 @@
         </div>
 
         <ol class="formula">
-          <li><b>01</b><span><strong>COLOR_THEME</strong> · ธีมสีที่กำหนด</span></li>
+          <li><b>01</b><span><strong>Core Configuration</strong> · เนื้อหาและรูปแบบหลัก</span></li>
           <li><b>02</b><span><strong>Design Concept</strong> · แนวคิดการออกแบบโดยรวม</span></li>
           <li><b>03</b><span><strong>Color System</strong> · ยึดสีจาก [01] เท่านั้น</span></li>
           <li><b>04</b><span><strong>Composition</strong> · จัดวางและลำดับความสำคัญ</span></li>
