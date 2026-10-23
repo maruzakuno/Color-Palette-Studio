@@ -202,6 +202,10 @@ img, svg { max-width: 100%; }
 .card.palette-card .swatches span { flex: 1; }
 .card.palette-card .pname { font-size: 13px; font-weight: 600; }
 .card.palette-card .pcat { font-family: var(--font-mono); font-size: 11px; color: var(--faint); letter-spacing: .02em; }
+.style-preview-grid { grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: 8px; margin-top: 8px; }
+.style-preview-grid .card.palette-card { padding: 10px 10px 9px; gap: 6px; }
+.style-preview-grid .card.palette-card .swatches { height: 20px; border-radius: 7px; }
+.style-preview-grid .card.palette-card .pname { font-size: 11.5px; }
 
 /* ---------- tone ramp ---------- */
 .tone-ramp-wrap { margin-top: 18px; }

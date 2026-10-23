@@ -33,11 +33,26 @@
     "Metallic Gold Reflection", "Sharp Focus", "High-end Editorial Design",
   ];
 
+  const COLOR_PALETTE_STYLE_PREVIEWS = [
+    { value: "", name: "ไม่ระบุ", swatches: ["#e5e7eb", "#9ca3af", "#4b5563"] },
+    { value: "Minimal Neutral (white, grey, black): clean, modern, premium — suited to dashboards, SaaS, portfolios", name: "🤍 Minimal Neutral", swatches: ["#ffffff", "#9ca3af", "#111827"] },
+    { value: "Blue Tech (blue tones): trustworthy, professional — suited to FinTech, cloud platforms, back-office systems", name: "🔵 Blue Tech", swatches: ["#2563eb", "#1e3a8a", "#60a5fa"] },
+    { value: "Purple AI (purple / gradient tones): futuristic, innovative — suited to AI platforms and startups", name: "🟣 Purple AI", swatches: ["#7c3aed", "#a78bfa", "#ec4899"] },
+    { value: "Green Nature (green tones): fresh, natural, healthy — suited to health, agriculture, environmental subjects", name: "🟢 Green Nature", swatches: ["#16a34a", "#22c55e", "#86efac"] },
+    { value: "Orange Energy (orange tones): energetic, enthusiastic, friendly — suited to food delivery, sports, events", name: "🟠 Orange Energy", swatches: ["#f97316", "#fb923c", "#fdba74"] },
+    { value: "Luxury Dark (black, gold, silver): luxurious, powerful, exclusive — suited to premium brands, finance, investment", name: "⚫ Luxury Dark", swatches: ["#0a0a0a", "#d4af37", "#c0c0c0"] },
+    { value: "Pastel Soft (soft pastel tones): gentle, cute, friendly — suited to parenting/children, education, lifestyle", name: "🌸 Pastel Soft", swatches: ["#fbcfe8", "#bfdbfe", "#fef3c7"] },
+    { value: "Vibrant Gradient (vivid gradient colors): dynamic, bold, eye-catching — suited to creative, music, landing pages", name: "🌈 Vibrant Gradient", swatches: ["#ff5e62", "#a855f7", "#06b6d4"] },
+    { value: "Monochrome (one hue across multiple shades): organized, clean, orderly — suited to admin panels, corporate", name: "🎯 Monochrome", swatches: ["#1e293b", "#475569", "#94a3b8"] },
+    { value: "Brand Identity Theme (derived from the organization's own brand colors): builds a distinctive, memorable identity, applicable to any organization", name: "⭐ Brand Identity", swatches: ["#4285f4", "#34a853", "#ea4335"] },
+  ];
+
   const LS_KEY = "healthPromptStudio.state.v1";
   const THEME_KEY = "healthPromptStudio.theme";
 
   const els = {
     colorPaletteStyle: document.getElementById("colorPaletteStyle"),
+    colorPaletteStylePreview: document.getElementById("colorPaletteStylePreview"),
     content: document.getElementById("contentInput"),
     clearContentBtn: document.getElementById("clearContentBtn"),
     useExampleContentBtn: document.getElementById("useExampleContentBtn"),
@@ -143,6 +158,29 @@
     els.styleTags.innerHTML = STYLE_TAGS
       .map((t) => `<span class="tag">${t}</span>`)
       .join("");
+  }
+
+  function renderColorPaletteStylePreview() {
+    els.colorPaletteStylePreview.innerHTML = "";
+    COLOR_PALETTE_STYLE_PREVIEWS.forEach((style) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "card palette-card";
+      card.setAttribute("role", "option");
+      card.setAttribute("aria-selected", String(state.colorPaletteStyle === style.value));
+      card.innerHTML = `
+        <span class="swatches">${style.swatches.map((hex) => `<span style="background:${hex}"></span>`).join("")}</span>
+        <span class="pname">${style.name}</span>
+      `;
+      card.addEventListener("click", () => {
+        state.colorPaletteStyle = style.value;
+        els.colorPaletteStyle.value = style.value;
+        renderColorPaletteStylePreview();
+        renderPrompt();
+        saveState();
+      });
+      els.colorPaletteStylePreview.appendChild(card);
+    });
   }
 
   function renderPreview() {
@@ -397,6 +435,7 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
   function bindEvents() {
     els.colorPaletteStyle.addEventListener("change", (e) => {
       state.colorPaletteStyle = e.target.value;
+      renderColorPaletteStylePreview();
       renderPrompt();
       saveState();
     });
@@ -549,6 +588,7 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     restoreFormFromState();
     renderAspectRatioHint();
     renderStyleTags();
+    renderColorPaletteStylePreview();
     renderPreview();
     renderPrompt();
     bindEvents();
