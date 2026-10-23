@@ -51,16 +51,9 @@
         <span class="brand-t"><b>Health Prompt Studio</b><small>AI Visual Prompt Library</small></span>
       </a>
       <nav class="nav-links" aria-label="ลัดไปยังส่วนต่าง ๆ">
-        <button type="button" data-goto="cats">หมวดหมู่สี</button>
-        <button type="button" data-goto="results">พาเลตทั้งหมด</button>
         <button type="button" data-goto="config">กำหนดเนื้อหา</button>
         <button type="button" data-goto="output">Master Prompt</button>
       </nav>
-      <div class="nav-search" role="search">
-        <svg class="i"><use href="#i-search"/></svg>
-        <label for="navSearch" class="sr-only">ค้นหาพาเลตสี</label>
-        <input id="navSearch" type="search" autocomplete="off" spellcheck="false" placeholder="ค้นหาพาเลต…" />
-      </div>
       <div class="nav-actions">
         <button class="icon-btn" type="button" id="themeBtn" aria-label="สลับโหมดสว่าง/มืด">
           <svg class="i"><use href="#i-moon"/></svg>
@@ -81,48 +74,21 @@
           <span class="eyebrow"><span class="dot"><svg class="i"><use href="#i-spark"/></svg></span>Health Prompt Studio</span>
           <h1 id="heroTitle">ปลดล็อกจินตนาการ<br /><span class="gt">Gen ภาพข้ามขีดจำกัด</span></h1>
           <p class="hero-org">สำนักงานสาธารณสุขจังหวัดนราธิวาส</p>
-          <p class="lead">เลือกพาเลตสีที่ออกแบบมาเฉพาะงานสุขภาพและราชการ กำหนดเนื้อหา แล้วคัดลอก Master Prompt ตามโครงสร้าง [01]–[07] ไปใช้กับ Midjourney, DALL·E, Gemini หรือเครื่องมือ AI image อื่น ๆ ได้ทันที</p>
-          <div class="hsearch" role="search" id="heroSearch">
-            <svg class="i s-ico"><use href="#i-search"/></svg>
-            <label for="q" class="sr-only">ค้นหาพาเลตสี</label>
-            <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="ค้นหา เช่น Luxury, Medical, Government, Teal…" />
-            <span class="s-right"><button class="clear" id="qClear" type="button" aria-label="ล้างคำค้นหา" hidden><svg class="i"><use href="#i-x"/></svg></button></span>
-          </div>
-          <div class="quick" id="quick"><span>ยอดนิยม</span></div>
-          <div class="hstats" id="stats"></div>
+          <p class="lead">กำหนดเนื้อหาและธีมสี แล้วคัดลอก Master Prompt ตามโครงสร้าง [01]–[08] ไปใช้กับ Midjourney, DALL·E, Gemini หรือเครื่องมือ AI image อื่น ๆ ได้ทันที</p>
         </div>
       </section>
     </div>
-
-    <section class="wrap sec" id="cats" aria-labelledby="catsTitle">
-      <div class="sec-head">
-        <div>
-          <div class="kick">Categories</div>
-          <h2 id="catsTitle">เลือกตามหมวดหมู่สี</h2>
-          <p>ครอบคลุมตั้งแต่งานสุขภาพในชีวิตประจำวัน จนถึงรายงานราชการระดับลักชัวรี</p>
-        </div>
-      </div>
-      <div class="bento" id="tiles"></div>
-    </section>
-
-    <section class="wrap sec" id="results" aria-labelledby="resTitle">
-      <div class="pillbar"><div class="pills" id="pills" role="toolbar" aria-label="หมวดหมู่สี"></div></div>
-      <div class="res-head">
-        <div class="res-title"><h2 id="resTitle">พาเลตสีทั้งหมด</h2><span class="count" id="resCount"></span></div>
-      </div>
-      <div class="grid" id="paletteGrid" role="listbox" aria-label="รายการพาเลตสี"></div>
-
-      <div class="tone-ramp-wrap">
-        <h3>โทนสี 4 สีจริงของพาเลตที่เลือก <small id="toneRampPaletteName"></small></h3>
-        <div class="tone-ramp" id="toneRamp" role="listbox" aria-label="โทนสี 4 สีของพาเลต"></div>
-      </div>
-    </section>
 
     <section class="wrap sec" id="config" aria-labelledby="configTitle">
       <div class="promo">
         <div>
           <div class="kick">Content &amp; Format</div>
           <h2 id="configTitle">กำหนดเนื้อหา &amp; รูปแบบ</h2>
+
+          <label class="field">
+            <span>COLOR_THEME — ธีมสี/โทนสี</span>
+            <input type="text" id="colorTheme" placeholder="เช่น เขียวมรกต-ทอง, น้ำเงินกรมท่า-ขาว, ฟ้าพาสเทล-ครีม" />
+          </label>
 
           <label class="field">
             <span class="field-label-row">ใส่เนื้อหา CONTENT — หัวข้อ/เนื้อหาหลัก<span class="field-label-actions"><button type="button" class="btn sm ghost" id="attachFileBtn">แนบไฟล์</button><button type="button" class="btn sm ghost" id="useExampleContentBtn">ใช้ตัวอย่าง</button><button type="button" class="btn sm ghost" id="clearContentBtn">ล้างข้อความ</button></span></span>
@@ -247,7 +213,7 @@
             </label>
             <label class="checkbox-field">
               <input type="checkbox" id="includeMetallic" checked />
-              <span>เอฟเฟกต์โลหะ/ทอง (ถ้าพาเลตมี)</span>
+              <span>เอฟเฟกต์โลหะ/ทอง</span>
             </label>
           </div>
 
@@ -258,7 +224,7 @@
         </div>
 
         <ol class="formula">
-          <li><b>01</b><span><strong>COLOR_THEME</strong> · พาเลตสีที่เลือกไว้</span></li>
+          <li><b>01</b><span><strong>COLOR_THEME</strong> · ธีมสีที่กำหนด</span></li>
           <li><b>02</b><span><strong>Design Concept</strong> · แนวคิดการออกแบบโดยรวม</span></li>
           <li><b>03</b><span><strong>Color System</strong> · ยึดสีจาก [01] เท่านั้น</span></li>
           <li><b>04</b><span><strong>Composition</strong> · จัดวางและลำดับความสำคัญ</span></li>
@@ -279,7 +245,6 @@
         <div class="preview-content">
           <p class="preview-eyebrow" id="previewType">BOOK / REPORT COVER</p>
           <h3 class="preview-title" id="previewTitle">หัวข้อของคุณจะแสดงที่นี่</h3>
-          <div class="preview-swatch-row" id="previewSwatches"></div>
           <p class="preview-ratio" id="previewRatio">3:4</p>
         </div>
       </div>
@@ -291,7 +256,6 @@
         <div class="output-actions">
           <button id="copyBtn" type="button" class="btn dark"><svg class="i"><use href="#i-copy"/></svg>คัดลอก</button>
           <button id="exportJsonBtn" type="button" class="btn sm"><svg class="i"><use href="#i-down"/></svg>Export JSON</button>
-          <button id="exportCssBtn" type="button" class="btn sm"><svg class="i"><use href="#i-down"/></svg>Export CSS</button>
         </div>
       </div>
       <textarea id="promptOutput" class="prompt-output" readonly aria-label="Master Prompt ที่สร้างขึ้น"></textarea>
@@ -307,7 +271,6 @@
       </span>
       <span style="display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn sm" type="button" id="footerExportJson"><svg class="i"><use href="#i-down"/></svg>ส่งออก JSON</button>
-        <button class="btn sm" type="button" id="footerExportCss"><svg class="i"><use href="#i-down"/></svg>ส่งออก CSS</button>
       </span>
     </div>
     <div class="wrap credit">
