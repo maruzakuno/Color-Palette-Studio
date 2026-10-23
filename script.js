@@ -6,6 +6,7 @@
     DEFAULT_CONTENT_TYPE,
     normalizeContentType,
     buildContentTypeGuidance,
+    getExampleContent,
   } = globalThis.HealthPromptContentTypes;
 
   const {
@@ -488,6 +489,7 @@
     toneRampPaletteName: document.getElementById("toneRampPaletteName"),
     content: document.getElementById("contentInput"),
     clearContentBtn: document.getElementById("clearContentBtn"),
+    useExampleContentBtn: document.getElementById("useExampleContentBtn"),
     department: document.getElementById("department"),
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
@@ -940,6 +942,16 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     els.clearContentBtn.addEventListener("click", () => {
       state.content = "";
       els.content.value = "";
+      els.content.focus();
+      renderPreview();
+      renderPrompt();
+      saveState();
+    });
+    els.useExampleContentBtn.addEventListener("click", () => {
+      const example = getExampleContent(state.contentType);
+      if (!example) return;
+      state.content = example;
+      els.content.value = example;
       els.content.focus();
       renderPreview();
       renderPrompt();
