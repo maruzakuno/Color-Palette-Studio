@@ -493,6 +493,7 @@
     attachFileBtn: document.getElementById("attachFileBtn"),
     attachFileInput: document.getElementById("attachFileInput"),
     attachFileStatus: document.getElementById("attachFileStatus"),
+    attachFileReport: document.getElementById("attachFileReport"),
     department: document.getElementById("department"),
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
@@ -965,20 +966,24 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     const name = file.name.toLowerCase();
 
     if (name.endsWith(".txt") || name.endsWith(".md")) {
-      return { text: await readFileAsText(file) };
+      return { text: await readFileAsText(file), method: "อ่านข้อความโดยตรง" };
     }
 
     if (name.endsWith(".docx")) {
       if (!window.mammoth) throw new Error("ไลบรารีอ่านไฟล์ Word ยังโหลดไม่เสร็จ ลองใหม่อีกครั้ง");
       const buffer = await readFileAsArrayBuffer(file);
       const result = await window.mammoth.extractRawText({ arrayBuffer: buffer });
-      return { text: result.value };
+      return { text: result.value, method: "แยกข้อความด้วย mammoth.js" };
     }
 
     if (name.endsWith(".doc")) {
       const buffer = await readFileAsArrayBuffer(file);
       const text = extractDocTextHeuristic(buffer);
-      return { text, note: "ไฟล์ .doc เก่าดึงข้อความแบบเบื้องต้น อาจมีตัวอักษรแปลกปนมา แนะนำแปลงเป็น .docx เพื่อความแม่นยำ" };
+      return {
+        text,
+        method: "ดึงข้อความแบบเบื้องต้น (UTF-16 scrape)",
+        note: "ไฟล์ .doc เก่าดึงข้อความแบบเบื้องต้น อาจมีตัวอักษรแปลกปนมา แนะนำแปลงเป็น .docx เพื่อความแม่นยำ",
+      };
     }
 
     if (name.endsWith(".xlsx") || name.endsWith(".xls")) {
@@ -988,10 +993,38 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
       const text = workbook.SheetNames
         .map((sheetName) => `# ${sheetName}\n${window.XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName])}`)
         .join("\n\n");
-      return { text };
+      return { text, method: "แปลงชีทเป็นข้อความด้วย SheetJS", sheetNames: workbook.SheetNames };
     }
 
     throw new Error("รองรับเฉพาะไฟล์ .txt, .md, .docx, .doc, .xlsx, .xls");
+  }
+
+  function renderAttachFileReport(file, extracted, cleanedText) {
+    const wordCount = (cleanedText.match(/\S+/g) || []).length;
+    const lineCount = cleanedText ? cleanedText.split(/\r\n|\r|\n/).length : 0;
+    const preview = cleanedText.slice(0, 220);
+    const sheetRow = extracted.sheetNames
+      ? `<div><dt>ชีท</dt><dd>${extracted.sheetNames.length} ชีท — ${extracted.sheetNames.join(", ")}</dd></div>`
+      : "";
+
+    els.attachFileReport.innerHTML = `
+      <div class="ar-head">
+        <span>รายงานการประมวลผลไฟล์</span>
+        <span class="ar-badge deleted">ลบไฟล์ต้นฉบับแล้ว</span>
+      </div>
+      <dl>
+        <dt>ชื่อไฟล์</dt><dd>${file.name}</dd>
+        <dt>ขนาด</dt><dd>${(file.size / 1024).toLocaleString("th-TH", { maximumFractionDigits: 1 })} KB</dd>
+        <dt>วิธีประมวลผล</dt><dd>${extracted.method || "-"}</dd>
+        <dt>จำนวนตัวอักษร</dt><dd>${cleanedText.length.toLocaleString("th-TH")}</dd>
+        <dt>จำนวนคำ</dt><dd>${wordCount.toLocaleString("th-TH")}</dd>
+        <dt>จำนวนบรรทัด</dt><dd>${lineCount.toLocaleString("th-TH")}</dd>
+        ${sheetRow}
+      </dl>
+      ${extracted.note ? `<p class="ar-note">⚠ ${extracted.note}</p>` : ""}
+      <pre class="ar-preview">${preview.replace(/[<>&]/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[ch]))}${cleanedText.length > preview.length ? "…" : ""}</pre>
+    `;
+    els.attachFileReport.hidden = false;
   }
 
   function bindEvents() {
@@ -1037,14 +1070,15 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     els.attachFileInput.addEventListener("change", async (e) => {
       const file = e.target.files && e.target.files[0];
       if (!file) return;
-      els.attachFileStatus.textContent = `กำลังอ่านไฟล์ "${file.name}"…`;
+      els.attachFileReport.hidden = true;
+      els.attachFileStatus.textContent = `กำลังวิเคราะห์ไฟล์ "${file.name}"…`;
       try {
-        const { text, note } = await extractTextFromFile(file);
-        const cleaned = text.trim();
+        const extracted = await extractTextFromFile(file);
+        const cleaned = extracted.text.trim();
         state.content = cleaned;
         els.content.value = cleaned;
-        const lenLabel = cleaned.length.toLocaleString("th-TH");
-        els.attachFileStatus.textContent = `แนบไฟล์ "${file.name}" แล้ว (${lenLabel} ตัวอักษร)${note ? ` — ${note}` : ""} — ไฟล์ถูกอ่านเข้าหน่วยความจำเบราว์เซอร์เท่านั้น ไม่มีการอัปโหลดขึ้นเซิร์ฟเวอร์ และอ้างอิงไฟล์ถูกล้างทิ้งแล้ว`;
+        els.attachFileStatus.textContent = `ประมวลผลไฟล์ "${file.name}" เสร็จสิ้น — อ่านในเบราว์เซอร์เท่านั้น ไม่มีการอัปโหลดขึ้นเซิร์ฟเวอร์`;
+        renderAttachFileReport(file, extracted, cleaned);
         renderPreview();
         renderPrompt();
         saveState();
