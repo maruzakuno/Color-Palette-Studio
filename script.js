@@ -827,6 +827,7 @@ ${state.artStyle ? `Render characters and subjects in the ART_STYLE defined in [
 [06] QUALITY & OUTPUT
 Ultra-realistic, masterpiece, highly detailed, cinematic lighting, professional magazine quality, high-end editorial finishing, production-grade visual presentation. ${ratioGuidance.output}
 Style standard: ${STYLE_TAGS.join(" / ")}.
+Grand Masterpiece Illustration mandate: Act as a world-class fine artist crafting a masterpiece of the highest luxury and refinement in every detail. Clearly separate the image's structure, line-art weight, and surface texture so the result reads with complex, believable depth. Strictly NO flat solid colors or single-tone backgrounds anywhere in the frame — every surface must carry real color grading, light, shadow, and naturalistic tonal variation. Analyze and draw out the most distinctive qualities of any reference image supplied, crafting the final piece as if a master artist hand-finished every element.
 
 [07] NEGATIVE CONSTRAINTS
 Deliverable-specific constraints: ${typeGuidance.constraints}
