@@ -107,8 +107,11 @@
           <h2 id="configTitle">กำหนดเนื้อหา &amp; รูปแบบ</h2>
 
           <label class="field">
-            <span class="field-label-row">ใส่เนื้อหา CONTENT — หัวข้อ/เนื้อหาหลัก<button type="button" class="btn sm ghost" id="clearContentBtn">ล้างข้อความ</button></span>
+            <span class="field-label-row">ใส่เนื้อหา CONTENT — หัวข้อ/เนื้อหาหลัก<span class="field-label-actions"><button type="button" class="btn sm ghost" id="attachFileBtn">แนบไฟล์</button><button type="button" class="btn sm ghost" id="clearContentBtn">ล้างข้อความ</button></span></span>
+            <input type="file" id="attachFileInput" accept=".txt,.md,.xlsx,.xls,.docx,.doc,text/plain,text/markdown" hidden />
             <textarea id="contentInput" rows="2" placeholder="เช่น ปกรายงานประจำปี งานสาธารณสุขปฐมภูมิ จังหวัดนราธิวาส"></textarea>
+            <small id="attachFileStatus" class="field-hint" role="status" aria-live="polite"></small>
+            <div id="attachFileReport" class="attach-report" role="status" aria-live="polite" hidden></div>
           </label>
 
           <label class="field">
@@ -295,6 +298,8 @@
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
   <script src="content-types.js"></script>
   <script src="aspect-ratios.js"></script>
   <script src="islamic-art-styles.js"></script>

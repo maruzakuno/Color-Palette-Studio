@@ -488,6 +488,10 @@
     toneRampPaletteName: document.getElementById("toneRampPaletteName"),
     content: document.getElementById("contentInput"),
     clearContentBtn: document.getElementById("clearContentBtn"),
+    attachFileBtn: document.getElementById("attachFileBtn"),
+    attachFileInput: document.getElementById("attachFileInput"),
+    attachFileStatus: document.getElementById("attachFileStatus"),
+    attachFileReport: document.getElementById("attachFileReport"),
     department: document.getElementById("department"),
     contentType: document.getElementById("contentType"),
     aspectRatio: document.getElementById("aspectRatio"),
@@ -892,6 +896,109 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
     setTimeout(() => { els.copyStatus.textContent = ""; }, 2200);
   }
 
+  function readFileAsText(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result || ""));
+      reader.onerror = () => reject(reader.error || new Error("อ่านไฟล์ไม่สำเร็จ"));
+      reader.readAsText(file, "utf-8");
+    });
+  }
+
+  function readFileAsArrayBuffer(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(reader.error || new Error("อ่านไฟล์ไม่สำเร็จ"));
+      reader.readAsArrayBuffer(file);
+    });
+  }
+
+  function extractDocTextHeuristic(buffer) {
+    const bytes = new Uint8Array(buffer);
+    let text = "";
+    for (let i = 0; i < bytes.length - 1; i += 2) {
+      const code = bytes[i] | (bytes[i + 1] << 8);
+      const isAscii = code >= 0x20 && code <= 0x7e;
+      const isThai = code >= 0x0e00 && code <= 0x0e7f;
+      const isBreak = code === 0x0a || code === 0x0d || code === 0x09;
+      if (isAscii || isThai || isBreak) {
+        text += String.fromCharCode(code);
+      } else if (code !== 0x0000) {
+        text += " ";
+      }
+    }
+    return text
+      .replace(/[ \t]{2,}/g, " ")
+      .replace(/\n{3,}/g, "\n\n")
+      .trim();
+  }
+
+  async function extractTextFromFile(file) {
+    const name = file.name.toLowerCase();
+
+    if (name.endsWith(".txt") || name.endsWith(".md")) {
+      return { text: await readFileAsText(file), method: "อ่านข้อความโดยตรง" };
+    }
+
+    if (name.endsWith(".docx")) {
+      if (!window.mammoth) throw new Error("ไลบรารีอ่านไฟล์ Word ยังโหลดไม่เสร็จ ลองใหม่อีกครั้ง");
+      const buffer = await readFileAsArrayBuffer(file);
+      const result = await window.mammoth.extractRawText({ arrayBuffer: buffer });
+      return { text: result.value, method: "แยกข้อความด้วย mammoth.js" };
+    }
+
+    if (name.endsWith(".doc")) {
+      const buffer = await readFileAsArrayBuffer(file);
+      const text = extractDocTextHeuristic(buffer);
+      return {
+        text,
+        method: "ดึงข้อความแบบเบื้องต้น (UTF-16 scrape)",
+        note: "ไฟล์ .doc เก่าดึงข้อความแบบเบื้องต้น อาจมีตัวอักษรแปลกปนมา แนะนำแปลงเป็น .docx เพื่อความแม่นยำ",
+      };
+    }
+
+    if (name.endsWith(".xlsx") || name.endsWith(".xls")) {
+      if (!window.XLSX) throw new Error("ไลบรารีอ่านไฟล์ Excel ยังโหลดไม่เสร็จ ลองใหม่อีกครั้ง");
+      const buffer = await readFileAsArrayBuffer(file);
+      const workbook = window.XLSX.read(buffer, { type: "array" });
+      const text = workbook.SheetNames
+        .map((sheetName) => `# ${sheetName}\n${window.XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName])}`)
+        .join("\n\n");
+      return { text, method: "แปลงชีทเป็นข้อความด้วย SheetJS", sheetNames: workbook.SheetNames };
+    }
+
+    throw new Error("รองรับเฉพาะไฟล์ .txt, .md, .docx, .doc, .xlsx, .xls");
+  }
+
+  function renderAttachFileReport(file, extracted, cleanedText) {
+    const wordCount = (cleanedText.match(/\S+/g) || []).length;
+    const lineCount = cleanedText ? cleanedText.split(/\r\n|\r|\n/).length : 0;
+    const preview = cleanedText.slice(0, 220);
+    const sheetRow = extracted.sheetNames
+      ? `<div><dt>ชีท</dt><dd>${extracted.sheetNames.length} ชีท — ${extracted.sheetNames.join(", ")}</dd></div>`
+      : "";
+
+    els.attachFileReport.innerHTML = `
+      <div class="ar-head">
+        <span>รายงานการประมวลผลไฟล์</span>
+        <span class="ar-badge deleted">ลบไฟล์ต้นฉบับแล้ว</span>
+      </div>
+      <dl>
+        <dt>ชื่อไฟล์</dt><dd>${file.name}</dd>
+        <dt>ขนาด</dt><dd>${(file.size / 1024).toLocaleString("th-TH", { maximumFractionDigits: 1 })} KB</dd>
+        <dt>วิธีประมวลผล</dt><dd>${extracted.method || "-"}</dd>
+        <dt>จำนวนตัวอักษร</dt><dd>${cleanedText.length.toLocaleString("th-TH")}</dd>
+        <dt>จำนวนคำ</dt><dd>${wordCount.toLocaleString("th-TH")}</dd>
+        <dt>จำนวนบรรทัด</dt><dd>${lineCount.toLocaleString("th-TH")}</dd>
+        ${sheetRow}
+      </dl>
+      ${extracted.note ? `<p class="ar-note">⚠ ${extracted.note}</p>` : ""}
+      <pre class="ar-preview">${preview.replace(/[<>&]/g, (ch) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;" }[ch]))}${cleanedText.length > preview.length ? "…" : ""}</pre>
+    `;
+    els.attachFileReport.hidden = false;
+  }
+
   function applyTheme(theme) {
     if (theme === "light" || theme === "dark") {
       document.documentElement.setAttribute("data-theme", theme);
@@ -941,9 +1048,36 @@ CONTENT TO RENDER (from [01]): "${state.content.trim()}"`;
       state.content = "";
       els.content.value = "";
       els.content.focus();
+      els.attachFileStatus.textContent = "";
+      els.attachFileReport.hidden = true;
+      els.attachFileReport.innerHTML = "";
       renderPreview();
       renderPrompt();
       saveState();
+    });
+    els.attachFileBtn.addEventListener("click", () => {
+      els.attachFileInput.click();
+    });
+    els.attachFileInput.addEventListener("change", async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      els.attachFileReport.hidden = true;
+      els.attachFileStatus.textContent = `กำลังวิเคราะห์ไฟล์ "${file.name}"…`;
+      try {
+        const extracted = await extractTextFromFile(file);
+        const cleaned = extracted.text.trim();
+        state.content = cleaned;
+        els.content.value = cleaned;
+        els.attachFileStatus.textContent = `ประมวลผลไฟล์ "${file.name}" เสร็จสิ้น — อ่านในเบราว์เซอร์เท่านั้น ไม่มีการอัปโหลดขึ้นเซิร์ฟเวอร์`;
+        renderAttachFileReport(file, extracted, cleaned);
+        renderPreview();
+        renderPrompt();
+        saveState();
+      } catch (err) {
+        els.attachFileStatus.textContent = `อ่านไฟล์ "${file.name}" ไม่สำเร็จ: ${err && err.message ? err.message : "ไม่รองรับไฟล์นี้"}`;
+      } finally {
+        e.target.value = "";
+      }
     });
     els.contentType.addEventListener("change", (e) => {
       state.contentType = e.target.value;
